@@ -1,25 +1,25 @@
 # TheQuest
 
-# SpaceShip
+## SpaceShip
 - point
 - speed
 - lives
 - image
 
-# Meteo
+## Meteo
 - image
 - type
 
-# Station
+## Station
 - image
 
-# Level
+## Level
 - imageBg
 - meteos
 - station
 
 
-# Status
+## Status
 - text_point
 - text_level
 - text_time
