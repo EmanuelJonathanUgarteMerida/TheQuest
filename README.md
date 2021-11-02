@@ -2,15 +2,18 @@
 This is a game that consist in crossing asteroids without collide against them to level complete.
 
 ## SpaceShip
-- point
-- speed_v
-- lives
 - image (dict image options)
+- rect
+- player_name
+- score
+- speed_y
+- lifes
 - sound (dict sounds)
 
-## Meteo
+## MetAteroideo
 - image
 - type ()
+- pos_ini
 
 ## Station
 - image
