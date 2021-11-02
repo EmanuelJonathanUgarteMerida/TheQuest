@@ -1,4 +1,5 @@
 # TheQuest
+This is a game that consist in crossing asteroids without collide against them to level complete.
 
 ## SpaceShip
 - point
