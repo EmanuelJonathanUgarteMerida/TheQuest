@@ -3,13 +3,14 @@ This is a game that consist in crossing asteroids without collide against them t
 
 ## SpaceShip
 - point
-- speed
+- speed_v
 - lives
-- image
+- image (dict image options)
+- sound (dict sounds)
 
 ## Meteo
 - image
-- type
+- type ()
 
 ## Station
 - image
@@ -24,3 +25,4 @@ This is a game that consist in crossing asteroids without collide against them t
 - text_point
 - text_level
 - text_time
+- text_live
