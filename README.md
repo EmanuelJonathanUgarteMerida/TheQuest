@@ -1,25 +1,25 @@
 # TheQuest
 
 space_ship
--point
--speed
--lives
--image
+- point
+- speed
+- lives
+- image
 
 meteos
--image
--type
+- image
+- type
 
 station
--image
+- image
 
 level
--imageBg
--meteos
--imageMeta
+- imageBg
+- meteos
+- imageMeta
 
 
 status
--text_point
--text_level
--text_time
+- text_point
+- text_level
+- text_time
