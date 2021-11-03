@@ -29,3 +29,6 @@ This is a game that consist in crossing asteroids without collide against them t
 - text_level
 - text_time
 - text_live
+
+
+sprites: https://craftpix.net/product/spaceship-2d-game-sprites/
