@@ -23,7 +23,8 @@ bg_rect = bg.get_rect()
 asteroid_sheet = SpriteSheet(
     'asteroids_sheet.png', 'asteroids_sheet.json', (255, 250, 205))
 asteroids_group = pg.sprite.Group()
-for x in range(25):
+
+for x in range(5):
     i = randint(0, 3)
     im = asteroid_sheet.data[f'{i}']
     ast = Asteroid(asteroid_sheet.get_image(im, 1))
@@ -53,7 +54,7 @@ while not game_over:
     frames += 1
 
     player.update()
-    asteroids_group.update()
+    asteroids_group.update(player)
     boxes_group.update()
 
     player.collision_asteroids(asteroids_group)

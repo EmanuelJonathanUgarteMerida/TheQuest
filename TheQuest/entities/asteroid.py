@@ -21,6 +21,8 @@ class Asteroid(Sprite):
         self.speed_x = randint(1, 3)
         self.level = randint(1, 3)
 
-    def update(self, *args, **kwargs):
+    def update(self, space_ship, *args, **kwargs):
         self.rect.x -= self.speed_x
-
+        if self.rect.right <= space_ship.rect.left:
+            space_ship.score += self.level
+            self.kill()

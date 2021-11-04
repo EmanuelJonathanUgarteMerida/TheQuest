@@ -10,6 +10,7 @@ class SpaceShip(Sprite):
         super().__init__()
         self.image = pg.image.load(SS_PATH_IMG_SHIP)
         self.score = 0
+        self.fuel = 0
         self.lives = SS_LIFE_LIMIT
         self.level = 0
         self.name = name
@@ -44,7 +45,10 @@ class SpaceShip(Sprite):
     def collision_asteroids(self, asteroid_group):
         collisions = pg.sprite.spritecollide(self, asteroid_group, True)
         if len(collisions) > 0:
-            self.lives -= collisions[0].level
+            asteroid = collisions[0]
+            self.lives -= asteroid.level
+            if self.lives > 0:
+                self.fuel -= asteroid.level*100
             self.sound_asteroid.play()
 
     def collision_boxes(self, boxes_group):
