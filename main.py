@@ -4,8 +4,9 @@ import os
 from random import randint
 from pygame.image import load
 
-from TheQuest import FPS, RESOURCES, SC_HEIGHT, SC_WIDTH
+from TheQuest import FPS, G_PATH_IMG, RESOURCES, SC_HEIGHT, SC_WIDTH
 from TheQuest.entities.box_object import BoxObject
+from TheQuest.entities.scoreboard import ScoreBoard
 from TheQuest.entities.space_ship import SpaceShip
 from TheQuest.entities.asteroid import Asteroid
 from util import SpriteSheet
@@ -15,13 +16,13 @@ pg.mixer.init()
 
 clock = pg.time.Clock()
 screen = pg.display.set_mode((SC_WIDTH, SC_HEIGHT))
-bg = pg.image.load(os.path.join(
-    RESOURCES, 'images', 'background', 'space_1.jpg'))
+bg = pg.image.load(G_PATH_IMG)
 bg_rect = bg.get_rect()
 
+score_board = ScoreBoard()
+
 # we created our asteroids
-asteroid_sheet = SpriteSheet(
-    'asteroids_sheet.png', 'asteroids_sheet.json', (255, 250, 205))
+asteroid_sheet = SpriteSheet((255, 250, 205))
 asteroids_group = pg.sprite.Group()
 
 for x in range(5):
@@ -57,11 +58,19 @@ while not game_over:
     asteroids_group.update(player)
     boxes_group.update()
 
+    score_board.update(player.score, player.lives, 0, 120)
+
     player.collision_asteroids(asteroids_group)
     player.collision_boxes(boxes_group)
 
     screen.blit(bg, bg_rect)
+    screen.blit(player.image, player.rect)
+    screen.blit(score_board.score_player, score_board.score_player_rect)
+    screen.blit(score_board.lives_player, score_board.lives_player_rect)
+    screen.blit(score_board.time_game, score_board.time_game_rect)
+    screen.blit(score_board.level_game, score_board.level_game_rect)
+
     asteroids_group.draw(screen)
     boxes_group.draw(screen)
-    screen.blit(player.image, player.rect)
+
     pg.display.flip()

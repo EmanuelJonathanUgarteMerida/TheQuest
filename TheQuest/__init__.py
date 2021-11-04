@@ -3,6 +3,7 @@ import os
 # DIR
 RESOURCES = 'resources'
 SOUNDS = 'sounds'
+FONTS = 'fonts'
 IMAGES = 'images'
 
 # Screen
@@ -20,6 +21,8 @@ SS_PATH_SOUND_AST = os.path.join(RESOURCES, SOUNDS, 'collision_asteroid.mp3')
 
 # Asteroid
 AS_SPEED_X = 5
+AS_PATH_IMG = os.path.join(RESOURCES, IMAGES, 'asteroids_sheet.png')
+AS_PATH_JSON = os.path.join(RESOURCES, IMAGES, 'asteroids_sheet.json')
 
 # Box_Object
 BO_OBJECTS = [('live_up', ('HP_Bonus.png', 1)), ('speed_up', ('Enemy_Speed_Debuff.png', 2)),
@@ -27,3 +30,11 @@ BO_OBJECTS = [('live_up', ('HP_Bonus.png', 1)), ('speed_up', ('Enemy_Speed_Debuf
 
 # Game
 FPS = 60
+G_PATH_IMG = os.path.join(RESOURCES, IMAGES, 'background', 'space_1.jpg')
+
+# ScoreBoard
+SB_TITLE_FONT = 'GameCube.ttf'
+SB_BOARD_FONT = 'Game Of Squids.ttf'
+SB_PATH_FONT_BOARD = os.path.join(RESOURCES, FONTS, SB_BOARD_FONT)
+SB_SIZE_BOARD_TEXT = 30
+SB_COLOR_BOARD_TEXT = (255, 255, 255)

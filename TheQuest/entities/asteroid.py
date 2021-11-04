@@ -19,7 +19,7 @@ class Asteroid(Sprite):
         y = randint(0, SC_HEIGHT)
         self.rect.center = (x, y)
         self.speed_x = randint(1, 3)
-        self.level = randint(1, 3)
+        self.level = 1
 
     def update(self, space_ship, *args, **kwargs):
         self.rect.x -= self.speed_x

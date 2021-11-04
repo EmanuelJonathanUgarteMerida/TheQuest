@@ -1,20 +1,24 @@
-import pygame as pg
 import json
+from random import randint
+from TheQuest import AS_PATH_JSON
+import pygame as pg
 
-from TheQuest import AS_PATH_IMG, AS_PATH_JSON
 
+class Asteroids():
+    def __init__(self, size):
+        self.size = size
+        self.asteroids = []
 
-class SpriteSheet():
-    def __init__(self, colorkey):
-        self.sprite_sheet = pg.image.load(AS_PATH_IMG).convert_alpha()
-        self.data = self.leer_json()
-        self.colorkey = colorkey
-
-    def leer_json(self):
+    def generate_asteroid(self):
         json_data = open(AS_PATH_JSON, 'r')
         d = json.load(json_data)
         json_data.close()
-        return d
+
+        for x in range(5):
+            i = randint(0, 3)
+            im = d[f'{i}']
+            ast = self.get_image(im, 1)
+            # asteroids_group.add(ast)
 
     def get_image(self, settings, scale):
         width = settings['width']
@@ -26,6 +30,3 @@ class SpriteSheet():
         image = pg.transform.scale(image, (width*scale, height*scale))
         image.set_colorkey(self.colorkey)
         return image
-
-    def get_image_compose(self):
-        return
