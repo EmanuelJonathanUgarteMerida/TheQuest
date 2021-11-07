@@ -1,20 +1,23 @@
+import os
 import pygame as pg
 import json
 
-from TheQuest import AS_PATH_IMG, AS_PATH_JSON
+from TheQuest import IMAGES, RESOURCES
 
 
 class SpriteSheet():
-    def __init__(self, colorkey):
-        self.sprite_sheet = pg.image.load(AS_PATH_IMG).convert_alpha()
-        self.data = self.leer_json()
+    def __init__(self, img_name, json_name, colorkey):
+        self.sprite_sheet = pg.image.load(os.path.join(
+            RESOURCES, IMAGES, img_name)).convert_alpha()
+        self.leer_json(json_name)
         self.colorkey = colorkey
+        self.images = []
+        self.get_image_compose()
 
-    def leer_json(self):
-        json_data = open(AS_PATH_JSON, 'r')
-        d = json.load(json_data)
+    def leer_json(self, file):
+        json_data = open(os.path.join(RESOURCES, IMAGES, file), 'r')
+        self.data = json.load(json_data)
         json_data.close()
-        return d
 
     def get_image(self, settings, scale):
         width = settings['width']
@@ -28,4 +31,5 @@ class SpriteSheet():
         return image
 
     def get_image_compose(self):
-        return
+        for row in self.data:
+            self.images.append(self.get_image(self.data[row], 1))

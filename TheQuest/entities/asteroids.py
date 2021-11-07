@@ -7,20 +7,18 @@ from TheQuest.entities.asteroid import Asteroid
 
 
 class Asteroids():
-    def __init__(self, size):
-        self.size = size
+    def __init__(self):
         self.sprite_sheet = pg.image.load(AS_PATH_IMG).convert_alpha()
         self.colorkey = (0, 0, 0)
         self.group = pg.sprite.Group()
-        self.generate_asteroid()
 
-    def generate_asteroid(self):
+    def generate_asteroid(self, total):
         json_data = open(AS_PATH_JSON, 'r')
         d = json.load(json_data)
         json_data.close()
 
-        while len(self.group.sprites()) < self.size:
-            i = randint(0, 3)
+        for x in range(total):
+            i = randint(1, 4)
             im = d[f'{i}']
             ast = self.get_image(im, 1)
             self.group.add(Asteroid(ast))
