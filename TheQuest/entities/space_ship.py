@@ -8,7 +8,7 @@ from util import SpriteSheet
 
 
 class SpaceShip(Sprite):
-    def __init__(self, name):
+    def __init__(self):
         super().__init__()
         self.sprite_sheet = SpriteSheet(
             'rocket.jpg', 'rocket.json', (2, 20, 30))
@@ -16,7 +16,6 @@ class SpaceShip(Sprite):
         #self.image = self.images[0]
         self.score = 0
         self.lives = SS_LIFE_LIMIT
-        self.name = name
         self.speed_y = SS_SPEED_Y
         self.sound_asteroid = pg.mixer.Sound(SS_PATH_SOUND_AST)
         self.repairing = False

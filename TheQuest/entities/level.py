@@ -9,28 +9,26 @@ import pygame as pg
 
 
 class Level():
-    def __init__(self, screen, clock, bg, level, player_name):
+    def __init__(self, screen, clock, level, info_card):
         self.screen = screen
         self.clock = clock
         self.game_over = False
         self.level = level
         self.level_completed = False
-        self.image_bg = bg
-        self.image_bg_rect = self.image_bg.get_rect()
         self.bg_sound = 0
         self.timer = 0
         # classes
         self.planet = Planet(str(self.level))
-        self.score_board = ScoreBoard()
+        self.info_card = info_card
         self.asteroids = Asteroids()
-        self.player = SpaceShip(player_name)
+        self.player = SpaceShip()
         self.segundos = 0
 
     def updates(self):
         ticks = pg.time.get_ticks()//1000
         self.planet.update()
         if self.segundos >= G_LEVEL_LIMIT_TIME:
-            #self.planet.update()
+            # self.planet.update()
             self.level_completed = True
             self.player.auto = True
         elif ticks > self.segundos:
@@ -42,28 +40,26 @@ class Level():
 
         self.score_board.update(
             self.player.score, self.player.lives, 0, self.segundos)
-        self.image_bg_rect.left -= 1
 
     def collisions(self):
         self.player.collision_asteroids(self.asteroids.group)
 
     def blits(self):
-        self.screen.blit(self.image_bg, self.image_bg_rect)
         self.screen.blit(self.planet.image, self.planet.rect)
         self.screen.blit(self.player.image, self.player.rect)
-        self.screen.blit(self.score_board.score_player,
-                         self.score_board.score_player_rect)
-        self.screen.blit(self.score_board.lives_player,
-                         self.score_board.lives_player_rect)
-        self.screen.blit(self.score_board.level_game,
-                         self.score_board.level_game_rect)
-        self.screen.blit(self.score_board.time_game,
-                         self.score_board.time_game_rect)
+        self.screen.blit(self.info_card.score_player,
+                         self.info_card.score_player_rect)
+        self.screen.blit(self.info_card.lives_player,
+                         self.info_card.lives_player_rect)
+        self.screen.blit(self.info_card.level_game,
+                         self.info_card.level_game_rect)
+        self.screen.blit(self.info_card.time_game,
+                         self.info_card.time_game_rect)
 
     def draws(self):
         self.asteroids.group.draw(self.screen)
 
-    def play(self):
+    def start(self):
         while not self.game_over:
             self.clock.tick(FPS)
             for event in pg.event.get():
