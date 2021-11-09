@@ -1,15 +1,15 @@
 import pygame as pg
 
-from TheQuest import SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SB_POS_LEVEL_GAME, SB_POS_LIVES_PLAYER, SB_POS_SCORE_PLAYER, SB_POS_TIME_GAME, SB_SIZE_BOARD_TEXT
+from TheQuest import G_LIVES_LIMIT, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SB_POS_LEVEL_GAME, SB_POS_LIVES_PLAYER, SB_POS_SCORE_PLAYER, SB_POS_TIME_GAME, SB_SIZE_BOARD_TEXT
 
 
-class ScoreBoard():
+class InfoCard():
     def __init__(self, name):
         self.font = pg.font.Font(SB_PATH_FONT_BOARD, SB_SIZE_BOARD_TEXT)
         self.color_text = SB_COLOR_BOARD_TEXT
         self.anti_al = True
         self.score = 0
-        self.lives = 0
+        self.lives = G_LIVES_LIMIT
         self.level = 0
         self.time = 0
         self.name = name

@@ -3,7 +3,6 @@ from TheQuest import FPS, G_LEVEL_LIMIT_TIME
 from TheQuest.entities.asteroids import Asteroids
 from TheQuest.entities.box_object import BoxObject
 from TheQuest.entities.planet import Planet
-from TheQuest.entities.scoreboard import ScoreBoard
 from TheQuest.entities.space_ship import SpaceShip
 import pygame as pg
 
@@ -22,27 +21,33 @@ class Level():
         self.info_card = info_card
         self.asteroids = Asteroids()
         self.player = SpaceShip()
-        self.segundos = 0
+        self.reset_ship = False
 
     def updates(self):
         ticks = pg.time.get_ticks()//1000
-        self.planet.update()
-        if self.segundos >= G_LEVEL_LIMIT_TIME:
-            # self.planet.update()
+        if self.info_card.time >= G_LEVEL_LIMIT_TIME:
+            self.planet.update()
             self.level_completed = True
             self.player.auto = True
-        elif ticks > self.segundos:
+        elif ticks > self.info_card.time:
             self.asteroids.generate_asteroid(randint(1, 3))
-            self.segundos = ticks
 
+        self.info_card.time = ticks
         self.player.update()
-        self.asteroids.group.update(self.player)
+        self.asteroids.group.update()
+        self.info_card.update()
 
-        self.score_board.update(
-            self.player.score, self.player.lives, 0, self.segundos)
+        for sprite in self.asteroids.group:
+            if sprite.dodged:
+                self.info_card.score += 1
+                sprite.kill()
+                # print(self.info_card.score)
 
     def collisions(self):
         self.player.collision_asteroids(self.asteroids.group)
+        if self.player.collided:
+            self.info_card.lives -= 1
+            self.player = SpaceShip(pg.time.get_ticks()//1000)
 
     def blits(self):
         self.screen.blit(self.planet.image, self.planet.rect)
@@ -62,6 +67,7 @@ class Level():
     def start(self):
         while not self.game_over:
             self.clock.tick(FPS)
+            self.screen.fill((0, 0, 0))
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_SPACE:

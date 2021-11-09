@@ -1,5 +1,7 @@
 import os
 
+import pygame
+
 # DIR
 RESOURCES = 'resources'
 SOUNDS = 'sounds'
@@ -7,18 +9,20 @@ FONTS = 'fonts'
 IMAGES = 'images'
 
 # Screen
-SC_HEIGHT = 500
-SC_WIDTH = 1080
+SC_HEIGHT = 720
+SC_WIDTH = 1280
 
 # Player
-SS_IMG_SIZE = (50, 50)
+SS_IMG_SIZE = (123, 67)
 SS_SPEED_Y = 2
 SS_LIFE_LIMIT = 5
 SS_BONUS_LEVEL = 200
-SS_FREQ_ANIMATION = 5
+SS_FREQ_ANIMATION = 2
 SS_PATH_IMG_SHIP = os.path.join(RESOURCES, IMAGES, 'rocket.jpg')
 SS_PATH_SOUND_BOX = os.path.join(RESOURCES, SOUNDS, 'collision_box.mp3')
 SS_PATH_SOUND_AST = os.path.join(RESOURCES, SOUNDS, 'collision_asteroid.mp3')
+SS_TIME_REPAIRING = 3
+SS_LOADING_TIME = 2
 
 # Asteroid
 AS_SPEED_X = 5

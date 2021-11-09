@@ -35,5 +35,8 @@ class Quest (Scene):
                 Level(self.screen, self.clock, x, self.info_card))
 
     def start(self):
-        for level in self.levels:
+        for x in range(1, len(self.levels)+1):
+            level = Level(self.screen, self.clock, x, self.info_card)
             level.start()
+            # Comprobamos si se ha perdido las vidas para finalizar partida
+            print(f'tenemos {self.info_card.lives} vidas')

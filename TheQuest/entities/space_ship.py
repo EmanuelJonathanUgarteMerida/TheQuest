@@ -3,34 +3,33 @@ import os
 from pygame import image
 
 from pygame.sprite import Sprite
-from TheQuest import IMAGES, RESOURCES, SC_HEIGHT, SC_WIDTH, SS_FREQ_ANIMATION, SS_LIFE_LIMIT, SS_IMG_SIZE, SS_PATH_SOUND_AST, SS_PATH_SOUND_BOX, SS_SPEED_Y
-from util import SpriteSheet
+from TheQuest import IMAGES, RESOURCES, SC_HEIGHT, SC_WIDTH, SS_FREQ_ANIMATION, SS_IMG_SIZE, SS_LOADING_TIME, SS_PATH_SOUND_AST, SS_SPEED_Y
 
 
 class SpaceShip(Sprite):
-    def __init__(self):
+    def __init__(self, time=0):
         super().__init__()
-        self.sprite_sheet = SpriteSheet(
-            'rocket.jpg', 'rocket.json', (2, 20, 30))
-        self.images = []
-        #self.image = self.images[0]
-        self.score = 0
-        self.lives = SS_LIFE_LIMIT
-        self.speed_y = SS_SPEED_Y
-        self.sound_asteroid = pg.mixer.Sound(SS_PATH_SOUND_AST)
-        self.repairing = False
-        self.auto = False
-        self.rep = 0
-        self.initialize()
-        self.freq_animation = SS_FREQ_ANIMATION
         self.pos_img = 0
+        self.images = []
+        self.load_images('loading')
         self.image = self.images[self.pos_img]
         self.rect = self.image.get_rect()
+        self.rect.midleft = (0, SC_HEIGHT/2)
+        self.speed_y = SS_SPEED_Y
+        self.sound_asteroid = pg.mixer.Sound(SS_PATH_SOUND_AST)
+        self.auto = False
+        self.loading = True
+        self.collided = False
+        self.time = time
+        self.reload_time = self.time+SS_LOADING_TIME
+        self.rep = 0
+        self.freq_animation = SS_FREQ_ANIMATION
+        self.angle = 0
 
-    def initialize(self):
-        for x in range(1, 5):
-            img = self.load_image('', x)
-            img = pg.transform.scale(img, SS_IMG_SIZE)
+    def load_images(self, mode=''):
+        for x in range(1, 7):
+            img = self.load_image(mode, x)
+            #img = pg.transform.scale(img, SS_IMG_SIZE)
             self.images.append(img)
 
     def load_image(self, mode, n):
@@ -40,14 +39,24 @@ class SpaceShip(Sprite):
         return img
 
     def update(self, *args, **kwargs):
-        if self.auto:
+        if self.loading:
+            ticks = pg.time.get_ticks()//1000
+            if ticks > self.time:
+                self.time = ticks
+                print(self.time)
+            if self.time == self.reload_time:
+                self.images.clear()
+                self.load_images()
+                self.loading = False
+            self.move()
+        elif self.auto:
             self.center_rocket()
             if self.rect.left < SC_WIDTH-50:
                 self.rect.left += 1
-            self.lading()
+            else:
+                self.lading()
         else:
             self.move()
-
         self.animate()
 
     def move(self):
@@ -74,7 +83,10 @@ class SpaceShip(Sprite):
             self.freq_animation -= 1
 
     def lading(self):
-        pass
+        self.angle += 10
+        if self.angle <= 180:
+            self.image = pg.transform.rotate(self.image, self.angle)
+            self.rect = self.image.get_rect()
 
     def center_rocket(self):
         if self.rect.centery < SC_HEIGHT/2:
@@ -83,20 +95,11 @@ class SpaceShip(Sprite):
             self.rect.centery -= 1
 
     def collision_asteroids(self, asteroid_group):
-        collisions = pg.sprite.spritecollide(self, asteroid_group, False)
-        if self.repairing:
-            pass
-        elif len(collisions) > 0 and not self.repairing:
-            for col in collisions:
-                if not col.dodged:
-                    self.lives -= 1
-                    self.repairing = True
-                    self.sound_asteroid.play()
-
-    def collision_boxes(self, boxes_group):
-        collisions = pg.sprite.spritecollide(self, boxes_group, True)
-        if len(collisions) > 0:
-            self.sound_box.play()
+        if not self.loading and not self.auto:
+            collisions = pg.sprite.spritecollide(self, asteroid_group, False)
+            if len(collisions) > 0:
+                self.sound_asteroid.play()
+                self.collided = True
 
     def reset_rocket(self):
         if self.rep < 20:

@@ -16,8 +16,8 @@ class Planet(Sprite):
         self.rect.x = SC_WIDTH
 
     def update(self):
-        #if self.rect.centerx > SC_WIDTH-200:
-        #    self.rect.centerx -= 1
+        if self.rect.centerx > SC_WIDTH-200:
+            self.rect.centerx -= 1
 
         self.rect.midright = (SC_WIDTH, SC_HEIGHT/2)
 
