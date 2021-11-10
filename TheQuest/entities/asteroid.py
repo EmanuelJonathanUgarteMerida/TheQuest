@@ -3,17 +3,19 @@ import pygame as pg
 from pygame.sprite import Sprite
 from random import randint
 
-from TheQuest import SC_HEIGHT, SC_WIDTH
+from TheQuest import IMAGES, RESOURCES, SC_HEIGHT, SC_WIDTH
 
 
 class Asteroid(Sprite):
-    def __init__(self, image):
+    def __init__(self, level):
         super().__init__()
-        self.image = image
+        self.image = pg.image.load(os.path.join(
+            RESOURCES, IMAGES, 'asteroids', f'asteroid_{randint(1,10)}.png'))
         self.dodged = False
         self.rect = self.image.get_rect()
+        self.level = level
         self.create_asteroid()
-        self.speed_x = randint(1, 3)
+        self.speed_x = randint(self.level, self.level+1)
 
     def create_asteroid(self):
         # random generating position

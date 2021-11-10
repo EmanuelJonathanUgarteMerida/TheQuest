@@ -13,12 +13,14 @@ class Game():
         pg.mixer.init()
         self.screen = pg.display.set_mode((SC_WIDTH, SC_HEIGHT))
         self.clock = pg.time.Clock()
-        self.score_board = InfoCard('jhon')
+        self.info_card = InfoCard('jhon')
         # Cargamos las escenas Inicio - Partida - Fin Partida
-        self.scenes = [Presentation(self.screen, self.clock, self.score_board), Quest(
-            self.screen, self.clock, self.score_board)]
+        self.scenes = [Presentation(self.screen, self.clock, self.info_card), Quest(
+            self.screen, self.clock, self.info_card)]
 
     def play(self):
         for scene in self.scenes:
             scene.start()
-        pg.quit()
+            if scene.info_card.lives == 0:
+                print('perdiste el game papi!')
+                pg.quit()

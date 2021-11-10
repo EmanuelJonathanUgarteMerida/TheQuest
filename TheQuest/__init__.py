@@ -26,18 +26,12 @@ SS_LOADING_TIME = 2
 
 # Asteroid
 AS_SPEED_X = 5
-AS_PATH_IMG = os.path.join(RESOURCES, IMAGES, 'asteroids_sheet.png')
-AS_PATH_JSON = os.path.join(RESOURCES, IMAGES, 'asteroids_sheet.json')
-
-# Box_Object
-BO_OBJECTS = [('live_up', ('HP_Bonus.png', 1)), ('speed_up', ('Enemy_Speed_Debuff.png', 2)),
-              ('barrier', ('Barrier_Bonus.png', 1200)), ('fuel', ('Rockets_Bonus.png', 100)), ('space_trash', ('Hero_Speed_Debuff.png', -100, -2))]
 
 # Game
 FPS = 60
 G_PATH_IMG = os.path.join(RESOURCES, IMAGES, 'background', 'space_1.png')
 G_LEVEL_LIMIT_TIME = 10
-G_LIVES_LIMIT = 3
+G_LIVES_LIMIT = 10
 
 # ScoreBoard
 SB_TITLE_FONT = 'GameCube.ttf'

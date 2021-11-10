@@ -3,7 +3,6 @@ from pygame.sprite import Sprite
 import pygame as pg
 
 from TheQuest import IMAGES, RESOURCES, SC_HEIGHT, SC_WIDTH
-from util import SpriteSheet
 
 
 class Planet(Sprite):

@@ -7,7 +7,7 @@ from TheQuest import IMAGES, RESOURCES, SC_HEIGHT, SC_WIDTH, SS_FREQ_ANIMATION, 
 
 
 class SpaceShip(Sprite):
-    def __init__(self, time=0):
+    def __init__(self, level):
         super().__init__()
         self.pos_img = 0
         self.images = []
@@ -15,13 +15,13 @@ class SpaceShip(Sprite):
         self.image = self.images[self.pos_img]
         self.rect = self.image.get_rect()
         self.rect.midleft = (0, SC_HEIGHT/2)
-        self.speed_y = SS_SPEED_Y
+        self.speed_y = SS_SPEED_Y+level
         self.sound_asteroid = pg.mixer.Sound(SS_PATH_SOUND_AST)
         self.auto = False
         self.loading = True
         self.collided = False
         self.landed = False
-        self.time = time
+        self.time = pg.time.get_ticks()//1000
         self.reload_time = self.time+SS_LOADING_TIME
         self.rep = 0
         self.freq_animation = SS_FREQ_ANIMATION
@@ -30,7 +30,6 @@ class SpaceShip(Sprite):
     def load_images(self, mode=''):
         for x in range(1, 7):
             img = self.load_image(mode, x)
-            #img = pg.transform.scale(img, SS_IMG_SIZE)
             self.images.append(img)
 
     def load_image(self, mode, n):

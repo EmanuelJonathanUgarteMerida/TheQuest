@@ -37,7 +37,7 @@ class InfoCard():
             self.level_completed_rect = self.level_completed.get_rect()
             self.level_completed_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
 
-            self.continued = self.render('Para continuar presiona <ENTER>')
+            self.continued = self.render('Presiona <ESPACIO> para continuar')
             self.continued_rect = self.continued.get_rect()
             self.continued_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT-100)
 

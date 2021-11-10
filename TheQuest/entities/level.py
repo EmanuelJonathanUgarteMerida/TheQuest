@@ -1,7 +1,6 @@
 from random import randint
 from TheQuest import FPS, G_LEVEL_LIMIT_TIME
 from TheQuest.entities.asteroids import Asteroids
-from TheQuest.entities.box_object import BoxObject
 from TheQuest.entities.planet import Planet
 from TheQuest.entities.space_ship import SpaceShip
 import pygame as pg
@@ -15,22 +14,23 @@ class Level():
         self.level = level
         self.level_completed = False
         self.bg_sound = 0
-        self.timer = 0
+        self.goal_time = pg.time.get_ticks()//1000+G_LEVEL_LIMIT_TIME
         # classes
         self.planet = Planet(str(self.level))
         self.info_card = info_card
-        self.asteroids = Asteroids()
-        self.player = SpaceShip()
+        self.info_card.time = 0
+        self.asteroids = Asteroids(self.level)
+        self.player = SpaceShip(self.level)
         self.reset_ship = False
 
     def updates(self):
         ticks = pg.time.get_ticks()//1000
-        if self.info_card.time >= G_LEVEL_LIMIT_TIME:
+        if self.info_card.time >= self.goal_time:
             self.planet.update()
             self.level_completed = True
             self.player.auto = True
         elif ticks > self.info_card.time:
-            self.asteroids.generate_asteroid(randint(1, 3))
+            self.asteroids.generate_asteroid(randint(self.level, self.level+1))
 
         self.player.update()
         self.asteroids.group.update()
@@ -41,13 +41,12 @@ class Level():
             if sprite.dodged:
                 self.info_card.score += 1
                 sprite.kill()
-                # print(self.info_card.score)
 
     def collisions(self):
         self.player.collision_asteroids(self.asteroids.group)
         if self.player.collided:
             self.info_card.lives -= 1
-            self.player = SpaceShip(pg.time.get_ticks()//1000)
+            self.player = SpaceShip(self.level)
 
     def blits(self):
         self.screen.blit(self.planet.image, self.planet.rect)
@@ -79,11 +78,14 @@ class Level():
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_ESCAPE:
                         self.game_over = True
-                    if self.player.landed and event.key == pg.K_KP_ENTER:
+                    if self.player.landed and event.key == pg.K_SPACE:
                         self.game_over = True
 
+            if self.info_card.lives < 0:
+                self.game_over = True
+                pg.quit()
             self.updates()
             self.collisions()
-            self.blits()
             self.draws()
+            self.blits()
             pg.display.flip()
