@@ -32,10 +32,10 @@ class Level():
         elif ticks > self.info_card.time:
             self.asteroids.generate_asteroid(randint(1, 3))
 
-        self.info_card.time = ticks
         self.player.update()
         self.asteroids.group.update()
-        self.info_card.update()
+        self.info_card.time = ticks
+        self.info_card.update(self.player.landed)
 
         for sprite in self.asteroids.group:
             if sprite.dodged:
@@ -60,6 +60,11 @@ class Level():
                          self.info_card.level_game_rect)
         self.screen.blit(self.info_card.time_game,
                          self.info_card.time_game_rect)
+        if self.player.landed:
+            self.screen.blit(self.info_card.level_completed,
+                             self.info_card.level_completed_rect)
+            self.screen.blit(self.info_card.continued,
+                             self.info_card.continued_rect)
 
     def draws(self):
         self.asteroids.group.draw(self.screen)
@@ -69,9 +74,14 @@ class Level():
             self.clock.tick(FPS)
             self.screen.fill((0, 0, 0))
             for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.game_over = True
                 if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_SPACE:
+                    if event.key == pg.K_ESCAPE:
                         self.game_over = True
+                    if self.player.landed and event.key == pg.K_KP_ENTER:
+                        self.game_over = True
+
             self.updates()
             self.collisions()
             self.blits()

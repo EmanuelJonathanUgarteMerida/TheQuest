@@ -20,6 +20,7 @@ class SpaceShip(Sprite):
         self.auto = False
         self.loading = True
         self.collided = False
+        self.landed = False
         self.time = time
         self.reload_time = self.time+SS_LOADING_TIME
         self.rep = 0
@@ -52,7 +53,7 @@ class SpaceShip(Sprite):
         elif self.auto:
             self.center_rocket()
             if self.rect.left < SC_WIDTH-50:
-                self.rect.left += 1
+                self.rect.left += 10
             else:
                 self.lading()
         else:
@@ -83,10 +84,7 @@ class SpaceShip(Sprite):
             self.freq_animation -= 1
 
     def lading(self):
-        self.angle += 10
-        if self.angle <= 180:
-            self.image = pg.transform.rotate(self.image, self.angle)
-            self.rect = self.image.get_rect()
+        self.landed = True
 
     def center_rocket(self):
         if self.rect.centery < SC_HEIGHT/2:
