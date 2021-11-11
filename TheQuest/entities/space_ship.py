@@ -21,6 +21,7 @@ class SpaceShip(Sprite):
         self.loading = True
         self.collided = False
         self.landed = False
+        self.animated = False
         self.time = pg.time.get_ticks()//1000
         self.reload_time = self.time+SS_LOADING_TIME
         self.rep = 0
@@ -28,6 +29,7 @@ class SpaceShip(Sprite):
         self.angle = 0
 
     def load_images(self, mode=''):
+        self.images.clear()
         for x in range(1, 7):
             img = self.load_image(mode, x)
             self.images.append(img)
@@ -45,7 +47,6 @@ class SpaceShip(Sprite):
                 self.time = ticks
                 print(self.time)
             if self.time == self.reload_time:
-                self.images.clear()
                 self.load_images()
                 self.loading = False
             self.move()
@@ -96,7 +97,11 @@ class SpaceShip(Sprite):
             collisions = pg.sprite.spritecollide(self, asteroid_group, False)
             if len(collisions) > 0:
                 self.sound_asteroid.play()
-                self.collided = True
+                self.pos_img = 0
+                self.load_images('explosion')
+                self.animate()
+                if self.pos_img == len(self.images):
+                    self.collided = True
 
     def reset_rocket(self):
         if self.rep < 20:

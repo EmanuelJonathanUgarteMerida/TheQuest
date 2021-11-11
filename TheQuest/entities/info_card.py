@@ -15,19 +15,19 @@ class InfoCard():
         self.name = name
 
     def update(self, landed):
-        self.score_player = self.render(str(self.score))
+        self.score_player = self.render(f'Puntos: {self.score}')
         self.score_player_rect = self.score_player.get_rect()
         self.score_player_rect.topleft = SB_POS_SCORE_PLAYER
 
-        self.lives_player = self.render(str(self.lives))
+        self.lives_player = self.render(f'Vidas: {self.lives}')
         self.lives_player_rect = self.lives_player.get_rect()
-        self.lives_player_rect.topleft = SB_POS_LIVES_PLAYER
+        self.lives_player_rect.midtop = SB_POS_LIVES_PLAYER
 
-        self.level_game = self.render(str(self.level))
+        self.level_game = self.render(f'Nivel: {self.level}')
         self.level_game_rect = self.level_game.get_rect()
         self.level_game_rect.midtop = SB_POS_LEVEL_GAME
 
-        self.time_game = self.render(str(self.time))
+        self.time_game = self.render(f'Tiempo: {self.time} s.')
         self.time_game_rect = self.time_game.get_rect()
         self.time_game_rect.topright = SB_POS_TIME_GAME
 

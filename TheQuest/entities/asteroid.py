@@ -21,7 +21,7 @@ class Asteroid(Sprite):
         # random generating position
         x = randint(SC_WIDTH, SC_WIDTH+100)
         y = randint(0, SC_HEIGHT)
-        self.rect.center = (x, y)
+        self.rect.midleft = (x, y)
 
     def update(self, *args, **kwargs):
         self.rect.x -= self.speed_x

@@ -18,6 +18,7 @@ class Level():
         # classes
         self.planet = Planet(str(self.level))
         self.info_card = info_card
+        self.info_card.level = level
         self.info_card.time = 0
         self.asteroids = Asteroids(self.level)
         self.player = SpaceShip(self.level)
