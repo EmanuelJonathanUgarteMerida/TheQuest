@@ -1,42 +1,78 @@
 
-from TheQuest import G_PATH_IMG
+import os
+from random import randint
+from TheQuest import FPS, PR_DESC, PR_PATH_BG, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
+from TheQuest.entities.asteroids import Asteroids
 from TheQuest.entities.level import Level
 import pygame as pg
 
 
 class Scene:
-    def __init__(self, screen, clock, info_card):
+    def __init__(self, screen, clock, info_card, database):
         self.screen = screen
         self.clock = clock
         self.info_card = info_card
+        self.database = database
 
     def start(self):
         pass
 
 
 class Presentation(Scene):
-    def __init__(self, screen, clock, info_card):
-        super().__init__(screen, clock, info_card)
+    def __init__(self, screen, clock, info_card, database):
+        super().__init__(screen, clock, info_card, database)
+        self.clock = clock
+        self.bg = pg.image.load(PR_PATH_BG)
+        self.bg_rect = self.bg.get_rect()
+        self.bg_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
+        self.font = pg.font.Font(SB_PATH_FONT_BOARD, 50)
+
+        self.title = self.font.render('The Quest', True, SB_COLOR_BOARD_TEXT)
+        self.title_rect = self.title.get_rect()
+        self.title_rect.midtop = (SC_WIDTH/2, 100)
+
+        self.font = pg.font.Font(SB_PATH_FONT_BOARD, 20)
+        self.desc = self.font.render(PR_DESC, True, SB_COLOR_BOARD_TEXT)
+        self.desc_rect = self.desc.get_rect()
+        self.desc_rect.midtop = (SC_WIDTH/2, 180)
+
+        self.to_play = self.font.render(
+            'Preciona <Espacio> para iniciar', True, SB_COLOR_BOARD_TEXT)
+        self.to_play_rect = self.to_play.get_rect()
+        self.to_play_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT-200)
+
+        self.stay_here = True
 
     def start(self):
-        # aquí pedimos el nombre del jugador
-        pass
+        while self.stay_here:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_SPACE:
+                        self.stay_here = False
+
+            self.screen.blit(self.bg, self.bg_rect)
+            self.screen.blit(self.title, self.title_rect)
+            self.screen.blit(self.desc, self.desc_rect)
+            self.screen.blit(self.to_play, self.to_play_rect)
+            pg.display.flip()
 
 
 class Quest (Scene):
-    def __init__(self, screen, clock, info_card):
-        super().__init__(screen, clock, info_card)
-        self.levels = []
-        self.init_levels()
-
-    def init_levels(self):
-        for x in range(1, 8):
-            self.levels.append(
-                Level(self.screen, self.clock, x, self.info_card))
+    def __init__(self, screen, clock, info_card, database):
+        super().__init__(screen, clock, info_card, database)
+        self.database = database
 
     def start(self):
-        for x in range(1, len(self.levels)+1):
+        for x in range(1, 8):
             level = Level(self.screen, self.clock, x, self.info_card)
             level.start()
-            # Comprobamos si se ha perdido las vidas para finalizar partida
+            if self.info_card.lives < 0:
+                self.database.insert_update_info(
+                    'WEY', self.info_card.score, self.info_card.level)
             print(f'tenemos {self.info_card.lives} vidas')
+        """for level in self.levels:
+            level.start()"""
+
+        if self.info_card.lives >= 0:
+            print('Felicidades completaste el juego!')

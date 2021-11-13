@@ -17,11 +17,11 @@ class SpaceShip(Sprite):
         self.rect.midleft = (0, SC_HEIGHT/2)
         self.speed_y = SS_SPEED_Y+level
         self.sound_asteroid = pg.mixer.Sound(SS_PATH_SOUND_AST)
-        self.auto = False
         self.loading = True
         self.collided = False
+        self.auto = False
         self.landed = False
-        self.animated = False
+        self.collide_animation = False
         self.time = pg.time.get_ticks()//1000
         self.reload_time = self.time+SS_LOADING_TIME
         self.rep = 0
@@ -51,14 +51,22 @@ class SpaceShip(Sprite):
                 self.loading = False
             self.move()
         elif self.auto:
-            self.center_rocket()
-            if self.rect.left < SC_WIDTH-50:
-                self.rect.left += 10
-            else:
-                self.lading()
+            self.move_auto_y()
+            self.move_auto_x()
         else:
             self.move()
+
         self.animate()
+
+    def move_auto_y(self):
+        self.rect.centery = SC_HEIGHT/2
+
+    def move_auto_x(self):
+        if self.rect.left < SC_WIDTH-200:
+            self.rect.centerx += 10
+        else:
+            self.landed = True
+            self.rotating()
 
     def move(self):
         pressed = pg.key.get_pressed()
@@ -72,25 +80,24 @@ class SpaceShip(Sprite):
         elif self.rect.bottom > SC_HEIGHT:
             self.rect.bottom = SC_HEIGHT
 
+    def rotating(self):
+        if self.angle < 180:
+            self.angle += 10
+        else:
+            self.angle = 180
+
     def animate(self):
-        if self.freq_animation == 0:
+        if self.freq_animation == SS_FREQ_ANIMATION:
             if self.pos_img < len(self.images):
                 self.image = self.images[self.pos_img]
                 self.pos_img += 1
             else:
+                if self.collided:
+                    self.collide_animation = False
                 self.pos_img = 0
-            self.freq_animation = SS_FREQ_ANIMATION
+            self.freq_animation = 0
         else:
-            self.freq_animation -= 1
-
-    def lading(self):
-        self.landed = True
-
-    def center_rocket(self):
-        if self.rect.centery < SC_HEIGHT/2:
-            self.rect.centery += 1
-        elif self.rect.centery > SC_HEIGHT/2:
-            self.rect.centery -= 1
+            self.freq_animation += 1
 
     def collision_asteroids(self, asteroid_group):
         if not self.loading and not self.auto:
@@ -99,9 +106,10 @@ class SpaceShip(Sprite):
                 self.sound_asteroid.play()
                 self.pos_img = 0
                 self.load_images('explosion')
+                self.collided = True
+                self.collide_animation = True
+                self.freq_animation = SS_FREQ_ANIMATION
                 self.animate()
-                if self.pos_img == len(self.images):
-                    self.collided = True
 
     def reset_rocket(self):
         if self.rep < 20:

@@ -1,6 +1,6 @@
 import pygame as pg
 
-from TheQuest import G_LIVES_LIMIT, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SB_POS_LEVEL_GAME, SB_POS_LIVES_PLAYER, SB_POS_SCORE_PLAYER, SB_POS_TIME_GAME, SB_SIZE_BOARD_TEXT, SC_HEIGHT, SC_WIDTH
+from TheQuest import G_LEVEL_LIMIT_TIME, G_LIVES_LIMIT, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SB_POS_LEVEL_GAME, SB_POS_LIVES_PLAYER, SB_POS_SCORE_PLAYER, SB_POS_TIME_GAME, SB_SIZE_BOARD_TEXT, SC_HEIGHT, SC_WIDTH
 
 
 class InfoCard():
@@ -11,7 +11,7 @@ class InfoCard():
         self.score = 0
         self.lives = G_LIVES_LIMIT
         self.level = 0
-        self.time = 0
+        self.time = G_LEVEL_LIMIT_TIME
         self.name = name
 
     def update(self, landed):

@@ -4,7 +4,7 @@ from TheQuest.entities.asteroid import Asteroid
 
 
 class Asteroids():
-    def __init__(self, level):
+    def __init__(self, level=1):
         self.colorkey = (0, 0, 0)
         self.level = level
         self.group = pg.sprite.Group()

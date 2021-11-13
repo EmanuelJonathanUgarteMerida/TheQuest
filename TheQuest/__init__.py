@@ -7,6 +7,7 @@ RESOURCES = 'resources'
 SOUNDS = 'sounds'
 FONTS = 'fonts'
 IMAGES = 'images'
+BG = 'background'
 
 # Screen
 SC_HEIGHT = 720
@@ -25,13 +26,15 @@ SS_TIME_REPAIRING = 3
 SS_LOADING_TIME = 2
 
 # Asteroid
-AS_SPEED_X = 5
+AS_LIMITS_X = (0, SC_WIDTH)
+AS_LIMITS_Y = (0, SC_HEIGHT)
+AS_SPEED_X_FINISH = 10
 
 # Game
 FPS = 60
-G_PATH_IMG = os.path.join(RESOURCES, IMAGES, 'background', 'space_1.png')
-G_LEVEL_LIMIT_TIME = 10
-G_LIVES_LIMIT = 10
+G_PATH_IMG = os.path.join(RESOURCES, IMAGES, BG, 'space_1.png')
+G_LEVEL_LIMIT_TIME = 5
+G_LIVES_LIMIT = 3
 
 # ScoreBoard
 SB_TITLE_FONT = 'Games.ttf'
@@ -44,3 +47,10 @@ SB_MARGIN_TOP = 10
 SB_POS_LIVES_PLAYER = ((SC_WIDTH/4), SB_MARGIN_TOP)
 SB_POS_LEVEL_GAME = (SC_WIDTH/2, SB_MARGIN_TOP)
 SB_POS_TIME_GAME = (SC_WIDTH-10, SB_MARGIN_TOP)
+
+# Presentation
+PR_PATH_BG = os.path.join(RESOURCES, IMAGES, BG, 'bg.jpg')
+PR_DESC = 'El planeta tierra colapsó en el año 2050, \ny los pocos sobrevivientes lograron escapar en la nave \"Quest\"\n en busca de un nuevo planeta el cual habitar'
+
+# DBManager
+DBM_PATH = 'data/thequest.db'
