@@ -1,8 +1,11 @@
 
 import os
 from random import randint
+
+from pygame.display import Info
 from TheQuest import FPS, PR_DESC, PR_PATH_BG, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
 from TheQuest.entities.asteroids import Asteroids
+from TheQuest.entities.info_card import InfoCard
 from TheQuest.entities.level import Level
 import pygame as pg
 
@@ -62,17 +65,19 @@ class Quest (Scene):
     def __init__(self, screen, clock, info_card, database):
         super().__init__(screen, clock, info_card, database)
         self.database = database
+        self.levels = 7
 
     def start(self):
-        for x in range(1, 8):
-            level = Level(self.screen, self.clock, x, self.info_card)
+        number_level = 1
+        while number_level <= self.levels:
+            level = Level(self.screen, self.clock,
+                          number_level, self.info_card)
             level.start()
-            if self.info_card.lives < 0:
-                self.database.insert_update_info(
-                    'WEY', self.info_card.score, self.info_card.level)
-            print(f'tenemos {self.info_card.lives} vidas')
-        """for level in self.levels:
-            level.start()"""
 
-        if self.info_card.lives >= 0:
-            print('Felicidades completaste el juego!')
+            if self.info_card.lose or self.info_card.game_completed:
+                self.database.insert_update_info(
+                    'WEY', self.info_card.score, number_level)
+                self.info_card = InfoCard()
+                number_level = 1
+            else:
+                number_level += 1

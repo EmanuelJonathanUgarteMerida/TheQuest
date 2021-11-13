@@ -14,7 +14,7 @@ class Game():
         pg.mixer.init()
         self.screen = pg.display.set_mode((SC_WIDTH, SC_HEIGHT))
         self.clock = pg.time.Clock()
-        self.info_card = InfoCard('jhon')
+        self.info_card = InfoCard()
         self.database = DBManager()
         # Cargamos las escenas Inicio - Partida - Fin Partida
         self.scenes = [Presentation(self.screen, self.clock, self.info_card, self.database), Quest(

@@ -18,7 +18,8 @@ class Level():
         self.info_card.level = level
         self.info_card.time = G_LEVEL_LIMIT_TIME
         self.load_background()
-        self.game_over = False
+        self.still = True
+        self.restart = False
         self.frame = 0
         self.frame_sec = 0
         self.planet = Planet(self.level)
@@ -45,12 +46,15 @@ class Level():
         if self.player.landed:
             self.info_card.score += self.planet.bonus_points
             self.planet.bonus_points = 0
+            self.info_card.game_completed = self.level == 7
+            self.info_card.landed = True
 
         if self.player.auto:
             self.asteroids.group.update(True)
         else:
             self.asteroids.group.update()
-        self.info_card.update(self.player.landed)
+
+        self.info_card.update()
 
         for sprite in self.asteroids.group:
             if sprite.dodged:
@@ -69,6 +73,9 @@ class Level():
                 self.info_card.lives -= 1
                 if self.info_card.lives >= 0:
                     self.player = SpaceShip(self.level)
+                else:
+                    print('perdiste!')
+                    self.info_card.lose = True
         else:
             self.player.collision_asteroids(self.asteroids.group)
 
@@ -80,7 +87,6 @@ class Level():
             x, y = self.player.rect.center
             self.screen.blit(
                 img_copy, (x-int(img_copy.get_width()/2), y-int(img_copy.get_height()/2)))
-            print(f'rotando {self.player.angle}')
         else:
             self.screen.blit(self.player.image, self.player.rect)
 
@@ -88,7 +94,12 @@ class Level():
         self.screen.blit(self.info_card.score_player,
                          self.info_card.score_player_rect)
 
-        if not self.info_card.lives < 0:
+        if self.info_card.lose:
+            self.screen.blit(self.info_card.game_over,
+                             self.info_card.game_over_rect)
+            self.screen.blit(self.info_card.restart,
+                             self.info_card.restart_rect)
+        else:
             self.screen.blit(self.info_card.lives_player,
                              self.info_card.lives_player_rect)
 
@@ -99,15 +110,16 @@ class Level():
                          self.info_card.time_game_rect)
 
         if self.player.landed:
-            self.screen.blit(self.info_card.level_completed,
-                             self.info_card.level_completed_rect)
-            self.screen.blit(self.info_card.continued,
-                             self.info_card.continued_rect)
-
-        if self.info_card.lives < 0:
-            # Termina partida, mantener pantalla y preguntar si reiniciar o salir, salir llevará a pantalla inicio
-            # Se guarda la informacion en el ranking del juego
-            print('Sin vidas!')
+            if self.info_card.game_completed:
+                self.screen.blit(self.info_card.final,
+                                 self.info_card.final_rect)
+                self.screen.blit(self.info_card.restart,
+                                 self.info_card.restart_rect)
+            else:
+                self.screen.blit(self.info_card.level_completed,
+                                 self.info_card.level_completed_rect)
+                self.screen.blit(self.info_card.continued,
+                                 self.info_card.continued_rect)
 
     def draws(self):
         self.asteroids.group.draw(self.screen)
@@ -117,22 +129,24 @@ class Level():
             if event.type == pg.QUIT:
                 pg.quit()
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    self.game_over = True
-                if self.player.landed and event.key == pg.K_SPACE:
-                    self.game_over = True
+                if event.key == pg.K_SPACE:
+                    if self.player.landed:
+                        self.still = False
+                    elif self.info_card.lose or self.info_card.game_completed:
+                        self.still = False
+                        self.restart = True
 
     def start(self):
-        while not self.game_over:
+        while self.still:
             self.clock.tick(FPS)
 
             self.loop_events()
 
+            self.collisions()
             self.updates()
 
             self.screen.blit(self.bg, self.bg_rect)
 
-            self.collisions()
             self.draws()
             self.blits()
             self.blit_info()
