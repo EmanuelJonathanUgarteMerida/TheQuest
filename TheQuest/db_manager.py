@@ -7,7 +7,7 @@ class DBManager():
     def __init__(self):
         pass
 
-    def select_info(self):
+    def select_best_players(self):
         query = 'SELECT * FROM scoreboard ORDER BY score DESC LIMIT 5'
         connection = sqlite3.connect(DBM_PATH)
         cur = connection.cursor()
@@ -16,6 +16,7 @@ class DBManager():
         for row in result:
             print(row)
         connection.close()
+        return result
 
     def insert_update_info(self, name, score, level):
         insert_update = ''

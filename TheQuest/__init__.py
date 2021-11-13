@@ -33,7 +33,7 @@ AS_SPEED_X_FINISH = 10
 # Game
 FPS = 60
 G_PATH_IMG = os.path.join(RESOURCES, IMAGES, BG, 'space_1.png')
-G_LEVEL_LIMIT_TIME = 3
+G_LEVEL_LIMIT_TIME = 5
 G_LIVES_LIMIT = 3
 
 # ScoreBoard
@@ -51,6 +51,8 @@ SB_POS_TIME_GAME = (SC_WIDTH-10, SB_MARGIN_TOP)
 # Presentation
 PR_PATH_BG = os.path.join(RESOURCES, IMAGES, BG, 'bg.jpg')
 PR_DESC = 'El planeta tierra colapsó, y los pocos sobrevivientes lograron escapar en la nave \"Quest\"\n en busca de un nuevo planeta el cual habitar'
+PR_PATH_IMG_UP = os.path.join(RESOURCES, IMAGES, 'keys', 'up.png')
+PR_PATH_IMG_DOWN = os.path.join(RESOURCES, IMAGES, 'keys', 'down.png')
 
 # DBManager
 DBM_PATH = 'data/thequest.db'

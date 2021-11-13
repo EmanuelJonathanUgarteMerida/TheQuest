@@ -11,6 +11,7 @@ class InfoCard():
         self.landed = False
         self.game_completed = False
         self.lose = False
+        self.afk = False
         self.time = G_LEVEL_LIMIT_TIME
         self.lives = G_LIVES_LIMIT
         self.level = 0
@@ -37,29 +38,30 @@ class InfoCard():
             if self.game_completed:
                 self.final = self.render('Felicidades! Juego Terminado!')
                 self.final_rect = self.final.get_rect()
-                self.final_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
+                self.final_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT/2-50)
 
             else:
                 self.level_completed = self.render(
                     f'Nivel {self.level} Completado!')
                 self.level_completed_rect = self.level_completed.get_rect()
-                self.level_completed_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
+                self.level_completed_rect.midbottom = (
+                    SC_WIDTH/2, SC_HEIGHT/2-50)
 
                 self.continued = self.render(
                     'Presiona <ESPACIO> para continuar')
                 self.continued_rect = self.continued.get_rect()
-                self.continued_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT-100)
+                self.continued_rect.midtop = (SC_WIDTH/2, SC_HEIGHT/2+50)
 
         elif self.lose:
             self.game_over = self.render('Game Over...')
             self.game_over_rect = self.game_over.get_rect()
-            self.game_over_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
+            self.game_over_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT/2-50)
 
         if self.lose or self.game_completed:
             self.restart = self.render(
                 'Presiona <Espacio> para reiniciar juego')
             self.restart_rect = self.restart.get_rect()
-            self.restart_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT-100)
+            self.restart_rect.midtop = (SC_WIDTH/2, SC_HEIGHT/2+50)
 
     def render(self, txt):
         return self.font.render(txt, self.anti_al, self.color_text)
