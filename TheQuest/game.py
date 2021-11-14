@@ -4,7 +4,7 @@ from TheQuest import SC_HEIGHT, SC_WIDTH
 from TheQuest.db_manager import DBManager
 
 from TheQuest.entities.info_card import InfoCard
-from TheQuest.scenes import Presentation, Quest, Ranking
+from TheQuest.scenes import Presentation, Quest
 
 
 class Game():
@@ -23,20 +23,15 @@ class Game():
         self.scenes.clear()
         self.scenes = [Presentation(self.screen, self.clock, self.info_card, self.database),
                        Quest(self.screen, self.clock,
-                             self.info_card, self.database),
-                       Ranking(self.screen, self.clock, self.info_card, self.database)]
+                             self.info_card, self.database)]
 
     def play(self):
         index = 0
         while index < len(self.scenes):
             scene = self.scenes[index]
             scene.start()
-            if index == 0:
-                if scene.ranked:
-                    self.scenes[2].start()
-
             if scene.info_card.afk:
-                print('Volveremos a iniciar el juego')
+                print('Volvemos a portada')
                 self.initialize()
                 index = 0
             else:

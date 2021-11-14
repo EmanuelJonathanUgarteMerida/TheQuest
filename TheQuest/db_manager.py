@@ -1,5 +1,7 @@
 import sqlite3
 
+from pygame import Cursor
+
 from TheQuest import DBM_PATH
 
 
@@ -8,7 +10,7 @@ class DBManager():
         pass
 
     def select_best_players(self):
-        query = 'SELECT * FROM scoreboard ORDER BY score DESC LIMIT 5'
+        query = 'SELECT * FROM scoreboard ORDER BY score DESC'
         connection = sqlite3.connect(DBM_PATH)
         cur = connection.cursor()
         cur.execute(query)
@@ -18,8 +20,18 @@ class DBManager():
         connection.close()
         return result
 
-    def insert_update_info(self, name, score, level):
+    def select_min_score(self):
+        query = 'select min(score) from (select score from scoreboard ORDER BY score DESC LIMIT 5)'
+        connection = sqlite3.connect(DBM_PATH)
+        cur = connection.cursor()
+        cur.execute(query)
+        score = cur.fetchall()[0][0]
+        connection.close()
+        return score
+
+    def save_or_update_info(self, name, score, level):
         insert_update = ''
+        name = name.upper()
         if self.exist_player(name):
             insert_update = f'UPDATE scoreboard SET score={score}, last_level={level} WHERE player=\'{name}\''
         else:
@@ -27,6 +39,15 @@ class DBManager():
         connection = sqlite3.connect(DBM_PATH)
         cur = connection.cursor()
         cur.execute(insert_update)
+        connection.commit()
+        connection.close()
+        self.clear_table()
+
+    def clear_table(self):
+        delete = 'DELETE FROM scoreboard where score not BETWEEN (select min(score)from (select score from scoreboard ORDER BY score DESC LIMIT 5)) and (select max(score)from (select score from scoreboard ORDER BY score DESC LIMIT 5))'
+        connection = sqlite3.connect(DBM_PATH)
+        cur = connection.cursor()
+        cur.execute(delete)
         connection.commit()
         connection.close()
 

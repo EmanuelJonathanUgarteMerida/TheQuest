@@ -1,9 +1,6 @@
 import pygame as pg
-import os
-from pygame import image
-
 from pygame.sprite import Sprite
-from TheQuest import IMAGES, RESOURCES, SC_HEIGHT, SC_WIDTH, SS_FREQ_ANIMATION, SS_IMG_SIZE, SS_LOADING_TIME, SS_PATH_SOUND_AST, SS_SPEED_Y
+from TheQuest import SC_HEIGHT, SC_WIDTH, SS_FREQ_ANIMATION, SS_LOADING_TIME, SS_PATH_IMG_SHIP, SS_PATH_SOUND_AST, SS_SPEED_Y
 
 
 class SpaceShip(Sprite):
@@ -22,10 +19,9 @@ class SpaceShip(Sprite):
         self.auto = False
         self.landed = False
         self.collide_animation = False
-        self.time = pg.time.get_ticks()//1000
-        self.reload_time = self.time+SS_LOADING_TIME
-        self.rep = 0
+        self.time = 0
         self.freq_animation = SS_FREQ_ANIMATION
+        self.frame = 0
         self.angle = 0
 
     def load_images(self, mode=''):
@@ -33,30 +29,34 @@ class SpaceShip(Sprite):
         for x in range(1, 7):
             img = self.load_image(mode, x)
             self.images.append(img)
+        self.pos_img = 0
+        print(f'Sequence of images loaded to: {mode}')
 
     def load_image(self, mode, n):
         img_name = f'rocket_{mode}{n}.png'
-        img = pg.image.load(os.path.join(
-            RESOURCES, IMAGES, 'rocket', img_name))
+        img = pg.image.load(f'{SS_PATH_IMG_SHIP}\{img_name}')
         return img
 
     def update(self, *args, **kwargs):
         if self.loading:
-            ticks = pg.time.get_ticks()//1000
-            if ticks > self.time:
-                self.time = ticks
-                print(self.time)
-            if self.time == self.reload_time:
+            self.count_frames()
+            if self.time == SS_LOADING_TIME:
                 self.load_images()
                 self.loading = False
+                print('Loading Ship completed')
             self.move()
         elif self.auto:
             self.move_auto_y()
             self.move_auto_x()
         else:
             self.move()
-
         self.animate()
+
+    def count_frames(self):
+        self.frame += 1
+        if self.frame == 60:
+            self.time += 1
+            self.frame = 0
 
     def move_auto_y(self):
         self.rect.centery = SC_HEIGHT/2
@@ -103,24 +103,10 @@ class SpaceShip(Sprite):
         if not self.loading and not self.auto:
             collisions = pg.sprite.spritecollide(self, asteroid_group, False)
             if len(collisions) > 0:
+                print('Colisión!')
                 self.sound_asteroid.play()
-                self.pos_img = 0
                 self.load_images('explosion')
                 self.collided = True
                 self.collide_animation = True
                 self.freq_animation = SS_FREQ_ANIMATION
                 self.animate()
-
-    def reset_rocket(self):
-        if self.rep < 20:
-            if self.pos_img < len(self.images):
-                self.image = self.images[self.pos_img]
-                self.pos_img += 1
-            else:
-                self.pos_img = 0
-
-            self.rep += 1
-        else:
-            self.image = self.images[0]
-            self.repairing = False
-            self.rep = 0

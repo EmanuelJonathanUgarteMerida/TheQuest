@@ -1,34 +1,35 @@
 # TheQuest
 This is a game that consist in crossing asteroids without collide against them to level complete.
 
-## SpaceShip
-- image (dict image options)
-- rect
-- player_name
-- score
-- speed_y
-- lifes
-- sound (dict sounds)
+# Windows
+# Primero tener instalado python: 
+- https://www.python.org/downloads/
 
-## MetAteroideo
-- image
-- type ()
-- pos_ini
+# Comprobar la instalación Python:
+- En ventana del sistema: python --version
+- La versión confirma instalación correcta
 
-## Station
-- image
+# Descargar Git 
+- https://git-scm.com/download/win
+- Todo siguiente
 
-## Level
-- imageBg
-- meteos
-- station
+# Comprobar la instalación Git:
+- En ventana del sistema: git version
+- La versión confirma instalación correcta
 
+# Descargar proyecto:
+- En ventana del sistema, localizarnos en la carpeta donde queramos descargar el proyecto
+- git clone https://github.com/EmanuelJonathanUgarteMerida/TheQuest.git
 
-## Status
-- text_point
-- text_level
-- text_time
-- text_live
+# Creamos variable de entorno:
+- Nos posicionamos dentro de la carpeta del proyecto descargado (The Quest)
+- En ventana del sistema: python -m venv env
+- Activamos la variable creada (env): .\env\Scripts\activate
 
+# Descargamos librerias del proyecto
+- En ventana deñ sistema, para comprobar libererias disponibles: pip list
+- En ventana del sistema, para instalar las del proyecto: pip install -r requirements.txt
+- En ventana del sistema, para ver las isntaladas: pip list
 
-sprites: https://craftpix.net/product/spaceship-2d-game-sprites/
+# Lanzamos el juego
+- py main.py

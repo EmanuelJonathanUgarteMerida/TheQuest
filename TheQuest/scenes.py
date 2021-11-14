@@ -3,7 +3,7 @@ import os
 from random import randint
 
 from pygame.display import Info
-from TheQuest import FPS, PR_DESC, PR_PATH_BG, PR_PATH_IMG_DOWN, PR_PATH_IMG_UP, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
+from TheQuest import FPS, G_LEVEL_LIMIT_TIME, PR_DESC, PR_PATH_BG, PR_PATH_IMG_DOWN, PR_PATH_IMG_UP, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
 from TheQuest.entities.asteroids import Asteroids
 from TheQuest.entities.info_card import InfoCard
 from TheQuest.entities.level import Level
@@ -109,61 +109,19 @@ class Quest (Scene):
     def start(self):
         number_level = 1
         while number_level <= self.levels:
+            self.info_card.level = number_level
+            self.info_card.time = G_LEVEL_LIMIT_TIME
+            self.info_card.load_default_messages()
             level = Level(self.screen, self.clock,
-                          number_level, self.info_card)
+                          number_level, self.info_card, self.database)
+            print(f'\n\n\n############## LEVEL {level.level} Creado ##############')
             level.start()
 
             if self.info_card.lose or self.info_card.game_completed:
-                self.database.insert_update_info(
-                    'WEY', self.info_card.score, number_level)
                 if level.info_card.afk:
-                    print('Terminamos partida')
                     number_level = 99
                 else:
                     self.info_card = InfoCard()
                     number_level = 1
             else:
                 number_level += 1
-
-
-class Ranking (Scene):
-    def __init__(self, screen, clock, info_card, database):
-        super().__init__(screen, clock, info_card, database)
-        self.font = self.font = pg.font.Font(SB_PATH_FONT_BOARD, 50)
-
-        self.rank = self.font.render(
-            'Los 5 mejores jugadores', True, SB_COLOR_BOARD_TEXT)
-        self.rank_rect = self.rank.get_rect()
-        self.rank_rect.midtop = (SC_WIDTH/2, 20)
-
-        self.best_players = database.select_best_players()
-        self.still = True
-        self.players_txt = []
-        self.load_players()
-
-    def load_players(self):
-        distance = 0
-        for row in self.best_players:
-            distance += 50
-            self.players_txt.append(self.blit_players(row, distance))
-
-    def blit_players(self, row, distance):
-        nick = row[0]
-        score = row[1]
-        player = self.font.render(
-            f'{nick} --- \t{score}', True, SB_COLOR_BOARD_TEXT)
-        player_rect = player.get_rect()
-        player_rect.midtop = (SC_WIDTH/2, 100+distance)
-        return (player, player_rect)
-
-    def start(self):
-        while self.still:
-            for event in pg.event.get():
-                if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_SPACE:
-                        pg.quit()
-            self.screen.fill((0, 0, 0))
-            self.screen.blit(self.rank, self.rank_rect)
-            for player in self.players_txt:
-                self.screen.blit(player[0], player[1])
-            pg.display.flip()
