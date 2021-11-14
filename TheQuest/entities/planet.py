@@ -16,7 +16,7 @@ class Planet(Sprite):
         self.rect.x = SC_WIDTH
 
     def update(self):
-        if self.rect.centerx > SC_WIDTH-200:
+        if self.rect.centerx > SC_WIDTH-100:
             self.rect.centerx -= 1
 
     def load_planet(self):

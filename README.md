@@ -6,7 +6,7 @@ This is a game that consist in crossing asteroids without collide against them t
 - https://www.python.org/downloads/
 
 # Comprobar la instalación Python:
-- En ventana del sistema: python --version
+- En ventana del sistema: py --version ó python --version
 - La versión confirma instalación correcta
 
 # Descargar Git 
@@ -18,12 +18,12 @@ This is a game that consist in crossing asteroids without collide against them t
 - La versión confirma instalación correcta
 
 # Descargar proyecto:
-- En ventana del sistema, localizarnos en la carpeta donde queramos descargar el proyecto
-- git clone https://github.com/EmanuelJonathanUgarteMerida/TheQuest.git
+- En ventana del sistema, posicionarnos en la carpeta donde queramos descargar el proyecto
+- En ventana del sistema: git clone https://github.com/EmanuelJonathanUgarteMerida/TheQuest.git
 
 # Creamos variable de entorno:
 - Nos posicionamos dentro de la carpeta del proyecto descargado (The Quest)
-- En ventana del sistema: python -m venv env
+- En ventana del sistema: py -m venv env ó py -m venv env
 - Activamos la variable creada (env): .\env\Scripts\activate
 
 # Descargamos librerias del proyecto
@@ -33,3 +33,8 @@ This is a game that consist in crossing asteroids without collide against them t
 
 # Lanzamos el juego
 - py main.py
+
+# Estadísticas
+- Aparecerá al completar el juego
+- Perder todas las vidas implica reiniciar juego
+- Si no se reinicia el juego, se vuelve a portada

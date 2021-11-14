@@ -8,9 +8,7 @@ class InfoCard():
         self.font = pg.font.Font(SB_PATH_FONT_BOARD, SB_SIZE_BOARD_TEXT)
         self.color_text = SB_COLOR_BOARD_TEXT
         self.anti_al = True
-        self.landed = False
         self.game_completed = False
-        self.lose = False
         self.afk = False
         self.time = G_LEVEL_LIMIT_TIME
         self.lives = G_LIVES_LIMIT

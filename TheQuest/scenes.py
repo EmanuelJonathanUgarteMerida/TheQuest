@@ -26,53 +26,53 @@ class Presentation(Scene):
         super().__init__(screen, clock, info_card, database)
         self.clock = clock
         self.bg = pg.image.load(PR_PATH_BG)
+        self.bg = pg.transform.scale(self.bg, (SC_WIDTH, SC_HEIGHT))
         self.bg_rect = self.bg.get_rect()
         self.bg_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
         self.load_images()
         self.font = pg.font.Font(SB_PATH_FONT_BOARD, 50)
-        self.ranked = False
 
         self.title = self.font.render('The Quest', True, SB_COLOR_BOARD_TEXT)
         self.title_rect = self.title.get_rect()
         self.title_rect.midtop = (SC_WIDTH/2, 100)
 
         self.font = pg.font.Font(SB_PATH_FONT_BOARD, 20)
-        self.desc = self.font.render(PR_DESC, True, SB_COLOR_BOARD_TEXT)
-        self.desc_rect = self.desc.get_rect()
-        self.desc_rect.midtop = (SC_WIDTH/2, 180)
-
         self.up_text = self.font.render(
             'Esquivar hacia arriba', True, SB_COLOR_BOARD_TEXT)
         self.up_text_rect = self.up_text.get_rect()
         self.up_text_rect.midleft = (
-            SC_WIDTH/2, SC_HEIGHT/2-self.up.get_height()/2)
+            SC_WIDTH/2-25, SC_HEIGHT/2-self.up.get_height()/2+50)
 
         self.down_text = self.font.render(
             'Esquivar hacia abajo', True, SB_COLOR_BOARD_TEXT)
         self.down_text_rect = self.down_text.get_rect()
-        self.down_text_rect.topleft = (
-            SC_WIDTH/2, SC_HEIGHT/2+self.up.get_height()/2)
+        self.down_text_rect.midleft = (
+            SC_WIDTH/2-25, SC_HEIGHT/2+self.up.get_height()/2+50)
 
         self.to_play = self.font.render(
             'Preciona <Espacio> para iniciar', True, SB_COLOR_BOARD_TEXT)
         self.to_play_rect = self.to_play.get_rect()
         self.to_play_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT-200)
 
-        self.to_ranking = self.font.render(
-            'Preciona <Enter> para ver Ranking', True, SB_COLOR_BOARD_TEXT)
-        self.to_ranking_rect = self.to_ranking.get_rect()
-        self.to_ranking_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT-100)
-
         self.stay_here = True
+
+    def create_descripcion(self):
+        distance = 0
+        for txt in PR_DESC:
+            text = self.info_card.render(txt)
+            text_rect = text.get_rect()
+            text_rect.midtop = (SC_WIDTH/2, 180+distance)
+            self.screen.blit(text, text_rect)
+            distance += 20
 
     def load_images(self):
         self.up = pg.image.load(PR_PATH_IMG_UP)
         self.up_rect = self.up.get_rect()
-        self.up_rect.bottomright = (SC_WIDTH/2, SC_HEIGHT/2)
+        self.up_rect.bottomright = (SC_WIDTH/2-50, SC_HEIGHT/2+50)
 
         self.down = pg.image.load(PR_PATH_IMG_DOWN)
         self.down_rect = self.down.get_rect()
-        self.down_rect.topright = (SC_WIDTH/2, SC_HEIGHT/2)
+        self.down_rect.topright = (SC_WIDTH/2-50, SC_HEIGHT/2+50)
 
     def start(self):
         while self.stay_here:
@@ -83,19 +83,15 @@ class Presentation(Scene):
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_SPACE:
                         self.stay_here = False
-                    elif event.key == pg.K_KP_ENTER:
-                        self.ranked = True
-                        self.stay_here = False
 
             self.screen.blit(self.bg, self.bg_rect)
             self.screen.blit(self.title, self.title_rect)
-            self.screen.blit(self.desc, self.desc_rect)
+            self.create_descripcion()
             self.screen.blit(self.up, self.up_rect)
             self.screen.blit(self.down, self.down_rect)
             self.screen.blit(self.up_text, self.up_text_rect)
             self.screen.blit(self.down_text, self.down_text_rect)
             self.screen.blit(self.to_play, self.to_play_rect)
-            self.screen.blit(self.to_ranking, self.to_ranking_rect)
 
             pg.display.flip()
 
@@ -114,10 +110,11 @@ class Quest (Scene):
             self.info_card.load_default_messages()
             level = Level(self.screen, self.clock,
                           number_level, self.info_card, self.database)
-            print(f'\n\n\n############## LEVEL {level.level} Creado ##############')
+            print(
+                f'\n\n############## LEVEL {level.level} Creado ##############')
             level.start()
 
-            if self.info_card.lose or self.info_card.game_completed:
+            if self.info_card.lives == 0 or self.info_card.game_completed:
                 if level.info_card.afk:
                     number_level = 99
                 else:

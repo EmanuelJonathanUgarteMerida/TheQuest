@@ -26,6 +26,8 @@ class DBManager():
         cur = connection.cursor()
         cur.execute(query)
         score = cur.fetchall()[0][0]
+        if score == None:
+            score = 0
         connection.close()
         return score
 

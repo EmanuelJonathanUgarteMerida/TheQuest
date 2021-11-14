@@ -2,7 +2,7 @@ import os
 from random import randint
 
 from pygame.transform import rotate
-from TheQuest import FPS, IMAGES, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
+from TheQuest import FPS, G_REMAINING_TIME, IMAGES, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
 from TheQuest.entities.asteroids import Asteroids
 from TheQuest.entities.planet import Planet
 from TheQuest.entities.space_ship import SpaceShip
@@ -25,13 +25,14 @@ class Level():
         self.planet = Planet(self.level)
         self.asteroids = Asteroids(self.level)
         self.player = SpaceShip(self.level)
-        self.countdown = 10
+        self.countdown = G_REMAINING_TIME
         self.user_text = ''
         self.verificated_bbdd = False
         self.in_the_best = False
         self.min_score = 0
         self.show_ranking = False
         self.best_players = []
+        self.i = 0
 
     def load_background(self):
         self.bg = pg.image.load(os.path.join(
@@ -81,7 +82,6 @@ class Level():
                 if self.info_card.lives > 0:
                     self.player = SpaceShip(self.level)
                 else:
-                    self.info_card.lose = True
                     self.info_card.update()
         else:
             self.player.collision_asteroids(self.asteroids.group)
@@ -184,7 +184,7 @@ class Level():
         self.asteroids.group.draw(self.screen)
 
     def create_bg_close_level(self):
-        if self.info_card.lose or self.player.landed:
+        if self.info_card.lives == 0 or self.player.landed:
             self.screen.blit(self.info_card.shadow, self.info_card.shadow_rect)
 
     def save_or_update_score(self):
@@ -212,9 +212,17 @@ class Level():
                 if event.key == pg.K_SPACE:
                     if self.player.landed:
                         self.still = False
-                    elif self.info_card.lose or self.info_card.game_completed:
+                    elif self.info_card.lives == 0 or self.info_card.game_completed:
                         self.still = False
                         self.restart = True
+
+    def blit_background(self):
+        self.screen.blit(self.bg, (self.i, 0))
+        self.screen.blit(self.bg, (self.bg.get_width()+self.i, 0))
+        if (self.i == -self.bg.get_width()):
+            self.screen.blit(self.bg, (self.bg.get_width()+self.i, 0))
+            self.i = 0
+        self.i -= 1
 
     def start(self):
         while self.still:
@@ -227,7 +235,9 @@ class Level():
 
             self.screen.blit(self.bg, self.bg_rect)
 
-            if not self.info_card.lose:
+            self.blit_background()
+
+            if self.info_card.lives > 0:
                 self.updates()
 
             if self.countdown < 0:
@@ -237,4 +247,4 @@ class Level():
             self.create_bg_close_level()
             self.blits()
             self.blit_info()
-            pg.display.update()
+            pg.display.flip()

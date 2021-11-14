@@ -31,7 +31,6 @@ class Game():
             scene = self.scenes[index]
             scene.start()
             if scene.info_card.afk:
-                print('Volvemos a portada')
                 self.initialize()
                 index = 0
             else:
