@@ -89,13 +89,16 @@ class Level():
     def blits(self):
         self.screen.blit(self.planet.image, self.planet.rect)
         if self.player.landed:
-            img_copy = pg.transform.rotate(
-                self.player.image, self.player.angle)
-            x, y = self.player.rect.center
-            self.screen.blit(
-                img_copy, (x-int(img_copy.get_width()/2), y-int(img_copy.get_height()/2)))
+            self.rotate_rocket()
         else:
             self.screen.blit(self.player.image, self.player.rect)
+
+    def rotate_rocket(self):
+        img_copy = pg.transform.rotate(
+            self.player.image, self.player.angle)
+        x, y = self.player.rect.center
+        self.screen.blit(
+            img_copy, (x-int(img_copy.get_width()/2), y-int(img_copy.get_height()/2)))
 
     def blit_info(self):
         self.screen.blit(self.info_card.score_player,

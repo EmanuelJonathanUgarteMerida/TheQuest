@@ -38,3 +38,11 @@ This is a game that consist in crossing asteroids without collide against them t
 - Aparecerá al completar el juego
 - Perder todas las vidas implica reiniciar juego
 - Si no se reinicia el juego, se vuelve a portada
+
+# Settings __init__.py
+- **SC_HEIGHT** determina altura de ventana
+- **SC_WIDTH** determina anchuura de ventana
+- **G_LEVEL_LIMIT_TIME** determina la duración de cada nivel
+- **G_REMAINING_TIME** determina los segundos de cuenta atrás al perder las vidas
+- **G_LIVES_LIMIT** determina las vidas en el juego
+
