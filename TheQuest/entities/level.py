@@ -88,9 +88,9 @@ class Level():
     def blits(self):
         self.screen.blit(self.planet.image, self.planet.rect)
         if self.player.landed:
-            # self.rotate_rocket()
-            img_t = self.player.rotate_rocket()
-            self.screen.blit(img_t[0], img_t[1])
+            self.rotate_rocket()
+            #img_t = self.player.rotate_rocket()
+            #self.screen.blit(img_t[0], img_t[1])
         else:
             self.screen.blit(self.player.image, self.player.rect)
 
