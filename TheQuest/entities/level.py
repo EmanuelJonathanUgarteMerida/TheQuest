@@ -2,7 +2,7 @@ import os
 from random import randint
 
 from pygame.transform import rotate
-from TheQuest import FPS, G_REMAINING_TIME, IMAGES, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
+from TheQuest import FPS, G_REMAINING_TIME, IMAGES, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH, SOUNDS
 from TheQuest.entities.asteroids import Asteroids
 from TheQuest.entities.planet import Planet
 from TheQuest.entities.space_ship import SpaceShip
@@ -89,7 +89,9 @@ class Level():
     def blits(self):
         self.screen.blit(self.planet.image, self.planet.rect)
         if self.player.landed:
-            self.rotate_rocket()
+            # self.rotate_rocket()
+            img_t = self.player.rotate_rocket()
+            self.screen.blit(img_t[0], img_t[1])
         else:
             self.screen.blit(self.player.image, self.player.rect)
 

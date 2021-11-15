@@ -100,6 +100,7 @@ class SpaceShip(Sprite):
             self.freq_animation += 1
 
     def collision_asteroids(self, asteroid_group):
+
         if not self.loading and not self.auto:
             collisions = pg.sprite.spritecollide(self, asteroid_group, False)
             if len(collisions) > 0:
@@ -110,3 +111,14 @@ class SpaceShip(Sprite):
                 self.collide_animation = True
                 self.freq_animation = SS_FREQ_ANIMATION
                 self.animate()
+
+    def rotate_rocket(self):
+        img_copy = pg.transform.rotate(
+            self.image, self.angle)
+        x, y = self.rect.center
+        x -= x-int(img_copy.get_width()/2)
+        y -= int(img_copy.get_height()/2)
+        return (img_copy, (x, y))
+
+        self.screen.blit(
+            img_copy, (x-int(img_copy.get_width()/2), y-int(img_copy.get_height()/2)))
