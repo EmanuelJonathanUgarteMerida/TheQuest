@@ -28,7 +28,6 @@ class Level():
         self.countdown = G_REMAINING_TIME
         self.user_text = ''
         self.verificated_bbdd = False
-        self.in_the_best = False
         self.min_score = 0
         self.show_ranking = False
         self.best_players = []
