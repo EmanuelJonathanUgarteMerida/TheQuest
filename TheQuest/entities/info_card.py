@@ -1,6 +1,7 @@
 import pygame as pg
 
 from TheQuest import G_LEVEL_LIMIT_TIME, G_LIVES_LIMIT, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SB_POS_LEVEL_GAME, SB_POS_LIVES_PLAYER, SB_POS_SCORE_PLAYER, SB_POS_TIME_GAME, SB_SIZE_BOARD_TEXT, SC_HEIGHT, SC_WIDTH
+from utils import create_text
 
 
 class InfoCard():
@@ -24,6 +25,16 @@ class InfoCard():
         self.shadow_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
 
     def load_default_messages(self):
+
+        self.messages = {}
+        self.messages['final'] = create_text(
+            self.font, 'Felicidades! Juego Terminado!', 'midbottom', (SC_WIDTH/2, SC_HEIGHT/2-100))
+        self.messages['initials'] = create_text(
+            self.font, 'Escribe 3 iniciales:', 'midtop', (SC_WIDTH/2, SC_HEIGHT/2-70))
+        self.messages['level_completed'] = create_text(self.font, f'Nivel {self.level} Completado!', 'midbottom', (
+            SC_WIDTH/2, SC_HEIGHT/2-50))
+        self.messages['continued'] = create_text(
+            self.font, 'Presiona <ESPACIO> para continuar', 'midtop', (SC_WIDTH/2, SC_HEIGHT/2+50))
 
         # Game Completed
         self.final = self.render('Felicidades! Juego Terminado!')

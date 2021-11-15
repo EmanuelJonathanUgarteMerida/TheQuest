@@ -59,3 +59,6 @@ PR_PATH_IMG_DOWN = os.path.join(RESOURCES, IMAGES, 'keys', 'down.png')
 
 # DBManager
 DBM_PATH = 'data/thequest.db'
+
+# Color
+WHITE = (255, 255, 255)
