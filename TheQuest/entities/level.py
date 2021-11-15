@@ -115,40 +115,33 @@ class Level():
                          self.info_card.time_game_rect)
 
         if self.info_card.lives == 0:
-            self.screen.blit(self.info_card.game_over,
-                             self.info_card.game_over_rect)
+            self.blit_message('game_over')
             self.countdown_blit()
-            self.screen.blit(self.info_card.restart,
-                             self.info_card.restart_rect)
+            self.blit_message('restart')
 
         elif self.player.landed:
             if self.info_card.game_completed:
-                self.screen.blit(self.info_card.final,
-                                 self.info_card.final_rect)
-
+                self.blit_message('final')
                 if self.show_ranking:
                     self.load_players()
                 else:
                     self.between_min_score()
                     if self.info_card.score > self.min_score:
-                        self.screen.blit(self.info_card.initials,
-                                         self.info_card.initials_rect)
+                        self.blit_message('initials')
                         input_txt = self.font.render(
                             self.user_text, True, SB_COLOR_BOARD_TEXT)
                         input_txt_rect = input_txt.get_rect()
                         input_txt_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
                         self.screen.blit(input_txt, input_txt_rect)
-
-                    self.screen.blit(self.info_card.guardar,
-                                     self.info_card.guardar_rect)
-
-                self.screen.blit(self.info_card.restart,
-                                 self.info_card.restart_rect)
+                    self.blit_message('save')
+                self.blit_message('restart')
             else:
-                self.screen.blit(self.info_card.level_completed,
-                                 self.info_card.level_completed_rect)
-                self.screen.blit(self.info_card.continued,
-                                 self.info_card.continued_rect)
+                self.blit_message('level_completed')
+                self.blit_message('continued')
+
+    def blit_message(self, key):
+        render = self.info_card.messages[key]
+        self.screen.blit(render[0], render[1])
 
     def load_players(self):
         distance = 0

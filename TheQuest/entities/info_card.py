@@ -35,6 +35,12 @@ class InfoCard():
             SC_WIDTH/2, SC_HEIGHT/2-50))
         self.messages['continued'] = create_text(
             self.font, 'Presiona <ESPACIO> para continuar', 'midtop', (SC_WIDTH/2, SC_HEIGHT/2+50))
+        self.messages['game_over'] = create_text(
+            self.font, 'Game Over...', 'midbottom', (SC_WIDTH/2, SC_HEIGHT/2-50))
+        self.messages['restart'] = create_text(
+            self.font, 'Presiona <Espacio> para reiniciar juego', 'midtop', (SC_WIDTH/2, SC_HEIGHT/2+100))
+        self.messages['save'] = create_text(self.font, 'Presiona <Enter> para guardar puntos', 'midtop', (SC_WIDTH/2, SC_HEIGHT/2+50)
+                                            )
 
         # Game Completed
         self.final = self.render('Felicidades! Juego Terminado!')
