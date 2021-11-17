@@ -7,7 +7,7 @@ RESOURCES = 'resources'
 SOUNDS = 'sounds'
 FONTS = 'fonts'
 IMAGES = 'images'
-BG = 'background'
+BACKGROUND = 'background'
 
 # Screen
 SC_HEIGHT = 720
@@ -37,6 +37,7 @@ FPS = 60
 G_LEVEL_LIMIT_TIME = 10
 G_REMAINING_TIME = 15
 G_LIVES_LIMIT = 3
+G_MAX_LEVEL = len(os.listdir(os.path.join(RESOURCES, IMAGES, 'planets')))
 
 # ScoreBoard
 SB_TITLE_FONT = 'Games.ttf'
@@ -51,7 +52,7 @@ SB_POS_LEVEL_GAME = (SC_WIDTH/2, SB_MARGIN_TOP)
 SB_POS_TIME_GAME = (SC_WIDTH-10, SB_MARGIN_TOP)
 
 # Presentation
-PR_PATH_BG = os.path.join(RESOURCES, IMAGES, BG, 'bg.jpg')
+PR_PATH_BG = os.path.join(RESOURCES, IMAGES, BACKGROUND, 'bg.jpg')
 PR_DESC = ['El planeta tierra ha colapsado,', 'y los pocos sobrevivientes lograron escapar', 'en la nave \"Quest\"\n en busca de un nuevo planeta',
            'el cual puedan habitar las personas.', 'Sin embargo los planetas que se encuentren', 'en el camino, no van a ser aptos para los sobrevivientes', 'el viaje no terminará hasta encontrar el planeta perfecto.']
 PR_PATH_IMG_UP = os.path.join(RESOURCES, IMAGES, 'keys', 'up.png')

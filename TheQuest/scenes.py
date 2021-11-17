@@ -3,7 +3,7 @@ import os
 from random import randint
 
 from pygame.display import Info
-from TheQuest import FPS, G_LEVEL_LIMIT_TIME, PR_DESC, PR_PATH_BG, PR_PATH_IMG_DOWN, PR_PATH_IMG_UP, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
+from TheQuest import FPS, G_LEVEL_LIMIT_TIME, G_MAX_LEVEL, PR_DESC, PR_PATH_BG, PR_PATH_IMG_DOWN, PR_PATH_IMG_UP, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH
 from TheQuest.entities.asteroids import Asteroids
 from TheQuest.entities.info_card import InfoCard
 from TheQuest.entities.level import Level
@@ -100,11 +100,10 @@ class Quest (Scene):
     def __init__(self, screen, clock, info_card, database):
         super().__init__(screen, clock, info_card, database)
         self.database = database
-        self.levels = 7
 
     def start(self):
         number_level = 1
-        while number_level <= self.levels:
+        while number_level <= G_MAX_LEVEL:
             self.info_card.level = number_level
             self.info_card.time = G_LEVEL_LIMIT_TIME
             self.info_card.load_default_messages()

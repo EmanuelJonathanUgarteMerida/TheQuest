@@ -2,11 +2,13 @@ import os
 from random import randint
 
 from pygame.transform import rotate
-from TheQuest import FPS, G_REMAINING_TIME, IMAGES, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH, SOUNDS
+from TheQuest import BACKGROUND, FPS, G_MAX_LEVEL, G_REMAINING_TIME, IMAGES, RESOURCES, SB_COLOR_BOARD_TEXT, SB_PATH_FONT_BOARD, SC_HEIGHT, SC_WIDTH, SOUNDS
 from TheQuest.entities.asteroids import Asteroids
 from TheQuest.entities.planet import Planet
 from TheQuest.entities.space_ship import SpaceShip
 import pygame as pg
+
+from utils import create_text
 
 
 class Level():
@@ -18,6 +20,7 @@ class Level():
         self.database = database
         self.load_background()
         self.font = pg.font.Font(SB_PATH_FONT_BOARD, 80)
+        self.font_rank = pg.font.Font(SB_PATH_FONT_BOARD, 20)
         self.still = True
         self.restart = False
         self.frame = 0
@@ -35,7 +38,7 @@ class Level():
 
     def load_background(self):
         self.bg = pg.image.load(os.path.join(
-            RESOURCES, IMAGES, 'background', f'bg_{self.level}.jpg'))
+            RESOURCES, IMAGES, BACKGROUND, f'bg_{self.level}.jpg'))
         self.bg_rect = self.bg.get_rect()
 
     def updates(self):
@@ -43,17 +46,18 @@ class Level():
         if self.info_card.time == 0:
             self.planet.update()
             self.player.auto = True
-        elif self.frame_sec == 60 and self.info_card.lives > 0:
+        elif self.frame_sec == FPS and self.info_card.lives > 0:
             self.info_card.time -= 1
             self.frame_sec = 0
+            print('Se genera asteroides')
             self.asteroids.generate_asteroid(randint(self.level, self.level+1))
-            print('Se genera tanda de asteroides')
 
         self.player.update()
+
         if self.player.landed:
             self.info_card.score += self.planet.bonus_points
             self.planet.bonus_points = 0
-            self.info_card.game_completed = self.level == 7
+            self.info_card.game_completed = self.level == G_MAX_LEVEL
             self.info_card.landed = True
 
         if self.player.auto:
@@ -89,8 +93,6 @@ class Level():
         self.screen.blit(self.planet.image, self.planet.rect)
         if self.player.landed:
             self.rotate_rocket()
-            #img_t = self.player.rotate_rocket()
-            #self.screen.blit(img_t[0], img_t[1])
         else:
             self.screen.blit(self.player.image, self.player.rect)
 
@@ -102,17 +104,10 @@ class Level():
             img_copy, (x-int(img_copy.get_width()/2), y-int(img_copy.get_height()/2)))
 
     def blit_info(self):
-        self.screen.blit(self.info_card.score_player,
-                         self.info_card.score_player_rect)
-
-        self.screen.blit(self.info_card.lives_player,
-                         self.info_card.lives_player_rect)
-
-        self.screen.blit(self.info_card.level_game,
-                         self.info_card.level_game_rect)
-
-        self.screen.blit(self.info_card.time_game,
-                         self.info_card.time_game_rect)
+        self.blit_stats('score')
+        self.blit_stats('lives')
+        self.blit_stats('level')
+        self.blit_stats('time')
 
         if self.info_card.lives == 0:
             self.blit_message('game_over')
@@ -123,16 +118,14 @@ class Level():
             if self.info_card.game_completed:
                 self.blit_message('final')
                 if self.show_ranking:
-                    self.load_players()
+                    self.load_ranking()
                 else:
                     self.between_min_score()
                     if self.info_card.score > self.min_score:
                         self.blit_message('initials')
-                        input_txt = self.font.render(
-                            self.user_text, True, SB_COLOR_BOARD_TEXT)
-                        input_txt_rect = input_txt.get_rect()
-                        input_txt_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
-                        self.screen.blit(input_txt, input_txt_rect)
+                        input_txt = create_text(
+                            self.font, self.user_text, 'center', (SC_WIDTH/2, SC_HEIGHT/2))
+                        self.screen.blit(input_txt[0], input_txt[1])
                     self.blit_message('save')
                 self.blit_message('restart')
             else:
@@ -143,20 +136,22 @@ class Level():
         render = self.info_card.messages[key]
         self.screen.blit(render[0], render[1])
 
-    def load_players(self):
-        distance = 0
-        for row in self.best_players:
-            player = self.blit_players(row, distance)
-            self.screen.blit(player[0], player[1])
-            distance += 20
+    def blit_stats(self, key):
+        render = self.info_card.stats[key]
+        self.screen.blit(render[0], render[1])
 
-    def blit_players(self, row, distance):
-        nick = row[0]
-        score = row[1]
-        player = self.info_card.render(f'{nick} --- \t{score}')
-        player_rect = player.get_rect()
-        player_rect.midbottom = (SC_WIDTH/2, SC_HEIGHT/2-50+distance)
-        return (player, player_rect)
+    def blit_players(self, player, distance):
+        nick = player[0]
+        score = player[1]
+        render = create_text(
+            self.font_rank, f'{nick} --- \t{score}', 'midbottom', (SC_WIDTH/2, SC_HEIGHT/2-50+distance))
+        self.screen.blit(render[0], render[1])
+
+    def load_ranking(self):
+        distance = 0
+        for player in self.best_players:
+            self.blit_players(player, distance)
+            distance += 20
 
     def between_min_score(self):
         if not self.verificated_bbdd:
@@ -171,11 +166,9 @@ class Level():
             self.frame_sec += 1
 
         if self.countdown >= 0:
-            count_down = self.font.render(
-                str(self.countdown), True, SB_COLOR_BOARD_TEXT)
-            count_down_rect = count_down.get_rect()
-            count_down_rect.center = (SC_WIDTH/2, SC_HEIGHT/2)
-            self.screen.blit(count_down, count_down_rect)
+            count_down = create_text(
+                self.font, self.countdown, 'center', (SC_WIDTH/2, SC_HEIGHT/2))
+            self.screen.blit(count_down[0], count_down[1])
 
     def draws(self):
         self.asteroids.group.draw(self.screen)
@@ -205,7 +198,6 @@ class Level():
                             self.show_ranking = True
                     elif len(self.user_text) < 3:
                         self.user_text += event.unicode
-                        print(self.user_text)
                 if event.key == pg.K_SPACE:
                     if self.player.landed:
                         self.still = False

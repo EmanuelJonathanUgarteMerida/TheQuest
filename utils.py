@@ -2,6 +2,8 @@ from TheQuest import WHITE
 
 
 def create_text(font, text, rect_option, rect_coor):
+    if not isinstance(text, str):
+        text = str(text)
     txt = font.render(text, True, WHITE)
     txt_rect = txt_rect_option(txt, rect_option, rect_coor)
     return [txt, txt_rect]
