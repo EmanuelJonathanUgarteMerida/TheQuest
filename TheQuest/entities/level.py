@@ -53,6 +53,7 @@ class Level():
             self.asteroids.generate_asteroid(randint(self.level, self.level+1))
 
         self.player.update()
+        self.player.bullets.update()
 
         if self.player.landed:
             self.info_card.score += self.planet.bonus_points
@@ -60,23 +61,22 @@ class Level():
             self.info_card.game_completed = self.level == G_MAX_LEVEL
             self.info_card.landed = True
 
-        if self.player.auto:
-            self.asteroids.group.update(True)
-        else:
-            self.asteroids.group.update()
-
+        self.asteroids.group.update(self.player.auto)
         self.info_card.update()
 
-        for sprite in self.asteroids.group:
-            if sprite.dodged:
-                self.info_card.score += 1
-                sprite.kill()
+        self.verify_asteroid_dodged()
 
         if self.frame == 1:
             self.bg_rect.left -= 1
             self.frame = 0
         else:
             self.frame += 1
+
+    def verify_asteroid_dodged(self):
+        for sprite in self.asteroids.group:
+            if sprite.dodged:
+                self.info_card.score += 1
+                sprite.kill()
 
     def collisions(self):
         if self.player.collided:
@@ -172,6 +172,7 @@ class Level():
 
     def draws(self):
         self.asteroids.group.draw(self.screen)
+        # self.player.bullets.draw(self.screen)
 
     def create_bg_close_level(self):
         if self.info_card.lives == 0 or self.player.landed:
@@ -198,6 +199,11 @@ class Level():
                             self.show_ranking = True
                     elif len(self.user_text) < 3:
                         self.user_text += event.unicode
+                elif event.key == pg.K_x:
+                    if not self.player.auto:
+                        self.player.shoot()
+                        print('presionaste X')
+
                 if event.key == pg.K_SPACE:
                     if self.player.landed:
                         self.still = False

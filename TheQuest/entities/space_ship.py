@@ -1,6 +1,7 @@
 import pygame as pg
 from pygame.sprite import Sprite
 from TheQuest import SC_HEIGHT, SC_WIDTH, SS_FREQ_ANIMATION, SS_LOADING_TIME, SS_PATH_IMG_SHIP, SS_PATH_SOUND_AST, SS_SPEED_Y
+from TheQuest.entities.bullet import Bullet
 
 
 class SpaceShip(Sprite):
@@ -23,6 +24,7 @@ class SpaceShip(Sprite):
         self.freq_animation = SS_FREQ_ANIMATION
         self.frame = 0
         self.angle = 0
+        self.bullets = pg.sprite.Group()
 
     def load_images(self, mode=''):
         self.images.clear()
@@ -37,7 +39,7 @@ class SpaceShip(Sprite):
         img = pg.image.load(f'{SS_PATH_IMG_SHIP}\{img_name}')
         return img
 
-    def update(self, *args, **kwargs):
+    def update(self):
         if self.loading:
             self.count_frames()
             if self.time == SS_LOADING_TIME:
@@ -122,3 +124,6 @@ class SpaceShip(Sprite):
 
         self.screen.blit(
             img_copy, (x-int(img_copy.get_width()/2), y-int(img_copy.get_height()/2)))
+
+    def shoot(self):
+        self.bullets.add(Bullet(self.rect.centery))
