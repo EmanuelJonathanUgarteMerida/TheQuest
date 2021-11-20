@@ -16,11 +16,14 @@ SC_WIDTH = 1280
 # Player
 SS_IMG_SIZE = (123, 67)
 SS_SPEED_Y = 2
+SS_SPEED_X = 3
 SS_LIFE_LIMIT = 5
 SS_BONUS_LEVEL = 200
 SS_FREQ_ANIMATION = 2
+SS_BULLET_PER_SECOND = 3
 SS_PATH_SOUND_BOX = os.path.join(RESOURCES, SOUNDS, 'collision_box.mp3')
 SS_PATH_SOUND_AST = os.path.join(RESOURCES, SOUNDS, 'collision_asteroid.mp3')
+SS_PATH_IMG_BULLET = os.path.join(RESOURCES, IMAGES, 'bullets')
 
 SS_PATH_IMG_SHIP = os.path.join(RESOURCES, IMAGES, 'rocket')
 
@@ -34,7 +37,7 @@ AS_SPEED_X_FINISH = 10
 
 # Game
 FPS = 60
-G_LEVEL_LIMIT_TIME = 10
+G_LEVEL_LIMIT_TIME = 100
 G_REMAINING_TIME = 15
 G_LIVES_LIMIT = 3
 G_MAX_LEVEL = len(os.listdir(os.path.join(RESOURCES, IMAGES, 'planets')))

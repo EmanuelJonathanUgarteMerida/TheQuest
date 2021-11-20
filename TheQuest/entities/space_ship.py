@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.sprite import Sprite
-from TheQuest import SC_HEIGHT, SC_WIDTH, SS_FREQ_ANIMATION, SS_LOADING_TIME, SS_PATH_IMG_SHIP, SS_PATH_SOUND_AST, SS_SPEED_Y
+from TheQuest import FPS, SC_HEIGHT, SC_WIDTH, SS_BULLET_PER_SECOND, SS_FREQ_ANIMATION, SS_LOADING_TIME, SS_PATH_IMG_SHIP, SS_PATH_SOUND_AST, SS_SPEED_X, SS_SPEED_Y
 from TheQuest.entities.bullet import Bullet
 
 
@@ -14,6 +14,7 @@ class SpaceShip(Sprite):
         self.rect = self.image.get_rect()
         self.rect.midleft = (0, SC_HEIGHT/2)
         self.speed_y = SS_SPEED_Y+level
+        self.speed_x = SS_SPEED_X+level
         self.sound_asteroid = pg.mixer.Sound(SS_PATH_SOUND_AST)
         self.loading = True
         self.collided = False
@@ -25,6 +26,8 @@ class SpaceShip(Sprite):
         self.frame = 0
         self.angle = 0
         self.bullets = pg.sprite.Group()
+        self.frame_to_shoot = FPS/SS_BULLET_PER_SECOND
+        self.frame_state = self.frame_to_shoot
 
     def load_images(self, mode=''):
         self.images.clear()
@@ -46,17 +49,17 @@ class SpaceShip(Sprite):
                 self.load_images()
                 self.loading = False
                 print('Loading Ship completed')
-            self.move()
+            self.pressed_keys()
         elif self.auto:
             self.move_auto_y()
             self.move_auto_x()
         else:
-            self.move()
+            self.pressed_keys()
         self.animate()
 
     def count_frames(self):
         self.frame += 1
-        if self.frame == 60:
+        if self.frame == FPS:
             self.time += 1
             self.frame = 0
 
@@ -70,17 +73,37 @@ class SpaceShip(Sprite):
             self.landed = True
             self.rotating()
 
-    def move(self):
+    def pressed_keys(self):
         pressed = pg.key.get_pressed()
         if pressed[pg.K_UP]:
             self.rect.top -= self.speed_y
-        elif pressed[pg.K_DOWN]:
+
+        if pressed[pg.K_DOWN]:
             self.rect.bottom += self.speed_y
 
+        if pressed[pg.K_LEFT]:
+            pass
+            #self.rect.left -= self.speed_x
+
+        if pressed[pg.K_RIGHT]:
+            pass
+            #self.rect.right += self.speed_x
+
+        if pressed[pg.K_SPACE]:
+            pass
+            # self.shoot()
+        self.verify_limits()
+
+    def verify_limits(self):
         if self.rect.top < 0:
             self.rect.top = 0
         elif self.rect.bottom > SC_HEIGHT:
             self.rect.bottom = SC_HEIGHT
+
+        if self.rect.left < 0:
+            self.rect.left = 0
+        elif self.rect.right > SC_WIDTH:
+            self.rect.right = SC_WIDTH
 
     def rotating(self):
         if self.angle < 180:
@@ -114,16 +137,9 @@ class SpaceShip(Sprite):
                 self.freq_animation = SS_FREQ_ANIMATION
                 self.animate()
 
-    def rotate_rocket(self):
-        img_copy = pg.transform.rotate(
-            self.image, self.angle)
-        x, y = self.rect.center
-        x -= x-int(img_copy.get_width()/2)
-        y -= int(img_copy.get_height()/2)
-        return (img_copy, (x, y))
-
-        self.screen.blit(
-            img_copy, (x-int(img_copy.get_width()/2), y-int(img_copy.get_height()/2)))
-
     def shoot(self):
-        self.bullets.add(Bullet(self.rect.centery))
+        if self.frame_state == self.frame_to_shoot:
+            self.bullets.add(Bullet(self.rect.midright))
+            self.frame_state = 0
+        else:
+            self.frame_state += 1

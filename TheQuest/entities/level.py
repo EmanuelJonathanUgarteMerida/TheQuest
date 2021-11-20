@@ -88,6 +88,12 @@ class Level():
                     self.info_card.update()
         else:
             self.player.collision_asteroids(self.asteroids.group)
+            collisions = pg.sprite.groupcollide(
+                self.player.bullets, self.asteroids.group, True, True)
+            if len(collisions) > 0:
+                self.info_card.score += 1
+                pg.mixer.Sound(os.path.join(
+                    RESOURCES, SOUNDS, 'bom.mp3')).play()
 
     def blits(self):
         self.screen.blit(self.planet.image, self.planet.rect)
@@ -172,7 +178,7 @@ class Level():
 
     def draws(self):
         self.asteroids.group.draw(self.screen)
-        # self.player.bullets.draw(self.screen)
+        self.player.bullets.draw(self.screen)
 
     def create_bg_close_level(self):
         if self.info_card.lives == 0 or self.player.landed:
@@ -199,10 +205,6 @@ class Level():
                             self.show_ranking = True
                     elif len(self.user_text) < 3:
                         self.user_text += event.unicode
-                elif event.key == pg.K_x:
-                    if not self.player.auto:
-                        self.player.shoot()
-                        print('presionaste X')
 
                 if event.key == pg.K_SPACE:
                     if self.player.landed:
@@ -210,6 +212,8 @@ class Level():
                     elif self.info_card.lives == 0 or self.info_card.game_completed:
                         self.still = False
                         self.restart = True
+            elif event.type == pg.KEYUP:
+                self.player.frame_state = self.player.frame_to_shoot
 
     def blit_background(self):
         self.screen.blit(self.bg, (self.i, 0))
